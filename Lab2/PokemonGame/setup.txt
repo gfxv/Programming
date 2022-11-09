@@ -1,0 +1,11 @@
+javac -classpath lib/Pokemon.jar -d bin -sourcepath src src/*.java
+cd bin/
+touch manifest.mf
+echo "Main-Class: App\nClass-Path: Pokemon.jar" > manifest.mf
+
+echo "Manifest: "
+cat manifest.mf
+
+jar -cfm lab2.jar manifest.mf *.class
+
+echo ">> java -jar lab2.jar <<"
