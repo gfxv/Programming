@@ -3,9 +3,11 @@ cd bin/
 touch manifest.mf
 echo "Main-Class: App\nClass-Path: Pokemon.jar" > manifest.mf
 
-echo "Manifest: "
+echo -e "Manifest: "
 cat manifest.mf
 
 jar -cfm lab2.jar manifest.mf *.class
 
 echo ">> java -jar lab2.jar <<"
+
+

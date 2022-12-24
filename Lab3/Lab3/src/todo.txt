@@ -1,0 +1,41 @@
+Abstract Classes:
+    + LoonarCitizen
+
+Classes:
+    - LoonarShorty
+    + Factory
+    + Food
+    + Thing
+    + Job
+    + HotelOwner
+    + Doctor
+    + Ad
+    + Hotel
+
+Interfaces:
+    + JobAction
+    + ThingAction
+    + FoodAction
+    + CitizenAction
+
+Enums:
+    + FoodType
+    + CitizenType
+    + JobType
+
+NEW
+    Class:
+        Astronaut (Job)
+        RegularCitizen (LoonarCitizen)
+
+
+hashCode - toString - equals
+    ++ Ad
+    ++ Factory
+    ++ Food
+    + Hotel
+    ++ Job
+    ++ LoonarShorty
+    ++ LoonarCitizen
+    ++ Thing
+
