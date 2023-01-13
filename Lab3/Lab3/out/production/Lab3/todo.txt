@@ -1,41 +1,41 @@
 Abstract Classes:
-    + LoonarCitizen
+    + Citizens.LoonarCitizen
 
 Classes:
-    - LoonarShorty
-    + Factory
-    + Food
-    + Thing
-    + Job
-    + HotelOwner
-    + Doctor
-    + Ad
-    + Hotel
+    - Citizens.LoonarShorty
+    + Stuff.Factory
+    + Stuff.Food
+    + Stuff.Thing
+    + Stuff.Job
+    + Jobs.HotelOwner
+    + Jobs.Doctor
+    + Stuff.Ad
+    + Stuff.Hotel
 
 Interfaces:
-    + JobAction
-    + ThingAction
-    + FoodAction
-    + CitizenAction
+    + Actions.JobAction
+    + Actions.ThingAction
+    + Actions.FoodAction
+    + Actions.CitizenAction
 
 Enums:
-    + FoodType
-    + CitizenType
-    + JobType
+    + Enums.FoodType
+    + Enums.CitizenType
+    + Enums.JobType
 
 NEW
     Class:
-        Astronaut (Job)
-        RegularCitizen (LoonarCitizen)
+        Jobs.Astronaut (Stuff.Job)
+        RegularCitizen (Citizens.LoonarCitizen)
 
 
 hashCode - toString - equals
-    ++ Ad
-    ++ Factory
-    ++ Food
-    + Hotel
-    ++ Job
-    ++ LoonarShorty
-    ++ LoonarCitizen
-    ++ Thing
+    ++ Stuff.Ad
+    ++ Stuff.Factory
+    ++ Stuff.Food
+    + Stuff.Hotel
+    ++ Stuff.Job
+    ++ Citizens.LoonarShorty
+    ++ Citizens.LoonarCitizen
+    ++ Stuff.Thing
 

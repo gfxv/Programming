@@ -1,0 +1,5 @@
+touch manifest.mf
+echo "Main-Class: App" > manifest.mf
+javac *.java
+jar -cfm lab3.jar manifest.mf *.class
+java -jar lab3.jar

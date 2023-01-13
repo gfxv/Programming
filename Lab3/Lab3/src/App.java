@@ -1,3 +1,16 @@
+import Citizens.LoonarShorty;
+import Citizens.TestCitizen;
+import Enums.CitizenType;
+import Enums.FoodType;
+import Stuff.Ad;
+import Jobs.Doctor;
+import Jobs.HotelOwner;
+import Jobs.TestJob;
+import Stuff.Factory;
+import Stuff.Food;
+import Stuff.Hotel;
+import Stuff.Thing;
+
 public class App {
 
     public static void main(String[] args) {
@@ -7,7 +20,7 @@ public class App {
         HotelOwner hOwner = new HotelOwner("Haps");
         TestCitizen testC = new TestCitizen("ЪЫЪ", CitizenType.DAVILION, new TestJob("xdd"));
         TestCitizen goodDoc = new TestCitizen("gDOC", CitizenType.DAVILION, new Doctor("Хирург", new Ad("ЛУЧШИЙ ВРАЧ!", 10)));
-        TestCitizen badDoc = new TestCitizen("bDOC", CitizenType.VISITOR, new Doctor("Ветеринар", new Ad("ХУДШИЙ ВРАЧ!", 1)));
+        TestCitizen badDoc = new TestCitizen("bDOC", CitizenType.VISITOR, new Doctor("Ветеринар", new Ad("РЕЖУ ЛЮДЕЙ", 1)));
 
         Hotel emerald = new Hotel("Изумруд", hOwner);
 
