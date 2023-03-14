@@ -41,7 +41,7 @@ public class ShortyInfo {
         }
     }
 
-    public static class LfastVisitedProgramme {
+    public static class LastVisitedProgramme {
         private static String programmeName;
         private static LoonarCitizen presenter;
         private static double fee;

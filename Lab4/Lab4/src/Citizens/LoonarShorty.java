@@ -12,27 +12,26 @@ public class LoonarShorty extends LoonarCitizen {
 
     private int validRating = 8;
 
-    {
-        class ShortyInfo {
-            void showInfo() {
-                System.out.println("""
-                        Коротышка бесплатно живёт в отеле "Изумруд" благодаря Мига и Жулио
-                        Рекламирует фабрику "Заря"
-                        Посещает ТВ программы за неплохие деньги
-                        """);
-            }
-        }
-
-        ShortyInfo info = new ShortyInfo();
-        info.showInfo();
-
-    }
-
     public LoonarShorty (String name) {
         setName(name);
         setVisitInfo(true);
         setCitizenType(CitizenType.VISITOR);
         setJob(new Astronaut("Астронавт"));
+
+        {
+            class ShortyInfo {
+                void showInfo() {
+                    System.out.println("Имя " + LoonarShorty.this.getName());
+                    System.out.println("Работа: " + LoonarShorty.this.getJob().getName());
+                    System.out.println();
+
+                }
+            }
+
+            ShortyInfo info = new ShortyInfo();
+            info.showInfo();
+
+        }
     }
 
     @Override

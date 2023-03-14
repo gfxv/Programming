@@ -1,0 +1,35 @@
+add
+name1
+5 5 6
+65
+76
+PG
+dir1
+280
+loc1
+83 65
+show
+add
+name2
+6 7 6
+123
+7123
+PG_13
+dir2
+199
+loc2
+85 213
+show
+add
+name3
+2 2 8
+542
+928
+R
+dir3
+179
+loc3
+89 64
+show
+
+

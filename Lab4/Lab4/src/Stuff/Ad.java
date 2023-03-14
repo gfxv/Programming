@@ -35,7 +35,7 @@ public class Ad {
     }
 
     public String toString() {
-        return "Stuff.Ad: " + this.name + " Rating: " + this.rating;
+        return "Ad: " + this.name + " Rating: " + this.rating;
     }
 
     public boolean equals(Ad ad) {

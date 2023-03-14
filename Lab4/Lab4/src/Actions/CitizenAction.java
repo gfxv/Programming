@@ -1,6 +1,6 @@
 package Actions;
 
-public interface CitizenAction{
+public interface CitizenAction {
     void readNews();
     void visitHotel();
     void wannaLiveInHotel();
