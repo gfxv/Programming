@@ -6,6 +6,7 @@ import core.system.History;
 import core.system.Init;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class App {
@@ -27,11 +28,15 @@ public class App {
         Scanner scanner = new Scanner(System.in);
         Map<String, Command> commands = Commands.getCommands();
 
-
         while(true) {
             System.out.println("Type \"help\" to list all available commands");
             System.out.print(">>> ");
-            String[] input = scanner.nextLine().split(" ");
+            String[] input;
+            try {
+                input = scanner.nextLine().split(" ");
+            } catch (NoSuchElementException ignored) {
+                break;
+            }
             String user_command = input[0];
             if (input.length == 2) Config.setCmdParam(input[1]);
             if (commands.containsKey(user_command)) {
@@ -40,6 +45,9 @@ public class App {
                     commands.get(user_command).execute();
                 } catch (InvalidInputException e) {
                     System.out.println(e.getMessage());
+                } catch (NoSuchElementException e) {
+                    System.out.println("Bye!");
+                    System.exit(0);
                 } catch (Exception e) {
                     System.out.println("Oops...Something went wrong");
                 }
