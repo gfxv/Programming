@@ -50,19 +50,19 @@ public class Invoker {
         Command ExecuteScriptCommand = new ExecuteScriptCommand(systemCommandReceiver);
         commands.put(ExecuteScriptCommand.getName(), ExecuteScriptCommand);
 
-        Command AddIfMinCommand = new AddIfMinCommand();
+        Command AddIfMinCommand = new AddIfMinCommand(elementManipulationReceiver);
         commands.put(AddIfMinCommand.getName(), AddIfMinCommand);
 
-        Command RemoveByTBOCommand = new RemoveByTBOCommand();
+        Command RemoveByTBOCommand = new RemoveByTBOCommand(elementManipulationReceiver);
         commands.put(RemoveByTBOCommand.getName(), RemoveByTBOCommand);
 
-        Command FilterLessThanGPCCommand = new FilterLessThanGPCCommand();
+        Command FilterLessThanGPCCommand = new FilterLessThanGPCCommand(elementManipulationReceiver);
         commands.put(FilterLessThanGPCCommand.getName(), FilterLessThanGPCCommand);
 
-        Command CountGreaterThanMPAACommand = new CountGreaterThanMPAACommand();
+        Command CountGreaterThanMPAACommand = new CountGreaterThanMPAACommand(elementManipulationReceiver);
         commands.put(CountGreaterThanMPAACommand.getName(), CountGreaterThanMPAACommand);
 
-        Command RemoveLowerCommand = new RemoveLowerCommand();
+        Command RemoveLowerCommand = new RemoveLowerCommand(elementManipulationReceiver);
         commands.put(RemoveLowerCommand.getName(), RemoveLowerCommand);
 
         Command InfoCommand = new InfoCommand(systemCommandReceiver);

@@ -47,7 +47,8 @@ public class InputManager {
 
         MovieNameValidator.validate(movieName);
 
-        if (!scriptMode) System.out.println("Please, input amount of oscars, amount of golden palm and total box office");
+        if (!scriptMode) System.out.println("Please, input amount of oscars, amount of golden palm and total box office \n" +
+                "(write 3 values, using space as separator)");
         String[] primitives = input.nextLine().split(" "); // length = 3
 
         PrimitivesValidator.validate(primitives);
