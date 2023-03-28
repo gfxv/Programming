@@ -21,25 +21,5 @@ public class Config {
         DEFAULT_FILEPATH = filepath;
     }
 
-    /**
-     * Command argument
-     */
-    private static String cmdParam = "";
-
-    /**
-     * Getter for command argument
-     * @return command argument
-     */
-    public static String getCmdParam() {
-        return cmdParam;
-    }
-
-    /**
-     * Setter for command argument
-     * @param param
-     */
-    public static void setCmdParam(String param) {
-        cmdParam = param;
-    }
 
 }

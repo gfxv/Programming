@@ -2,6 +2,7 @@ package core.commands.commands;
 
 import core.commands.base.Command;
 import core.exceptions.InvalidInputException;
+import core.receivers.SystemCommandReceiver;
 import core.system.History;
 
 import java.util.List;
@@ -34,24 +35,18 @@ public class HistoryCommand implements Command {
         return this.desc;
     }
 
+    private SystemCommandReceiver receiver;
+
+    public HistoryCommand(SystemCommandReceiver receiver) {
+        this.receiver = receiver;
+    }
+
     /**
      * Prints five last commands (without args)
      * @throws InvalidInputException
      */
     @Override
-    public void execute() throws InvalidInputException {
-
-        List<String> commands = History.getHistory();
-
-        if (commands.size() == 0) {
-            System.out.println("History is empty");
-            return;
-        }
-
-        System.out.println("Last 5 commands:");
-        for (String command: commands) {
-            System.out.print(command + " ");
-        }
-        System.out.println();
+    public void execute(String args) throws InvalidInputException {
+        this.receiver.history();
     }
 }

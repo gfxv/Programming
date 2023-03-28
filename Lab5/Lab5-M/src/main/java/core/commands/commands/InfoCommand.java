@@ -2,6 +2,7 @@ package core.commands.commands;
 
 import core.commands.base.Command;
 import core.exceptions.InvalidInputException;
+import core.receivers.SystemCommandReceiver;
 import core.system.Storage;
 
 
@@ -19,6 +20,12 @@ public class InfoCommand implements Command {
      * Getter for name field
      * @return command name
      */
+
+    private SystemCommandReceiver receiver;
+
+    public InfoCommand(SystemCommandReceiver receiver) {
+        this.receiver = receiver;
+    }
     @Override
     public String getName() {
         return this.name;
@@ -37,8 +44,7 @@ public class InfoCommand implements Command {
      * @throws InvalidInputException
      */
     @Override
-    public void execute() throws InvalidInputException {
-        System.out.println("Storage size: " + Storage.getMovies().size());
-        System.out.println("Storage type: " + Storage.getMovies().getClass().getSimpleName());
+    public void execute(String args) throws InvalidInputException {
+        this.receiver.info();
     }
 }

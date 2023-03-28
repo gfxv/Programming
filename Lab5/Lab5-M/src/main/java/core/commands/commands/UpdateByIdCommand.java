@@ -4,8 +4,9 @@ import core.commands.base.Command;
 import core.enteties.Movie;
 import core.exceptions.InvalidInputException;
 import core.managers.InputManager;
-import core.system.Commands;
+import core.receivers.ElementManipulationReceiver;
 import core.system.Config;
+import core.system.Invoker;
 import core.system.Storage;
 
 public class UpdateByIdCommand implements Command {
@@ -17,6 +18,14 @@ public class UpdateByIdCommand implements Command {
      * Command description
      */
     private String desc = "update_by_id {element} : обновить значение элемента коллекции, id которого равен заданному";
+
+    private ElementManipulationReceiver receiver;
+
+    public UpdateByIdCommand(ElementManipulationReceiver receiver) {
+        this.receiver = receiver;
+    }
+
+
     /**
      * Getter for name field
      * @return command name
@@ -39,14 +48,7 @@ public class UpdateByIdCommand implements Command {
      * @throws InvalidInputException
      */
     @Override
-    public void execute() throws InvalidInputException {
-        InputManager input = new InputManager();
-        try {
-            Movie m = input.getMovie();
-            m.setId(Long.parseLong(Config.getCmdParam()));
-            Commands.getCommands().get(new RemoveByIdCommand().getName()).execute();
-            Storage.addMovie(m);
-        } catch (NullPointerException ignored) {}
-
+    public void execute(String args) throws InvalidInputException {
+        this.receiver.updateById(args);
     }
 }

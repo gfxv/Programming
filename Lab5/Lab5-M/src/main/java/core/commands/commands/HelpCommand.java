@@ -1,7 +1,8 @@
 package core.commands.commands;
 
 import core.commands.base.Command;
-import core.system.Commands;
+import core.receivers.SystemCommandReceiver;
+import core.system.Invoker;
 
 
 public class HelpCommand implements Command {
@@ -18,6 +19,13 @@ public class HelpCommand implements Command {
      * Getter for name field
      * @return command name
      */
+
+    private SystemCommandReceiver receiver;
+
+    public HelpCommand(SystemCommandReceiver receiver) {
+        this.receiver = receiver;
+    }
+
     @Override
     public String getName() {
         return this.name;
@@ -36,10 +44,7 @@ public class HelpCommand implements Command {
      * Shows info about all available commands
      */
     @Override
-    public void execute() {
-        System.out.println("Информация по всем командам:");
-        for (Command command : Commands.getCommands().values()) {
-            System.out.println(command.getDesc());
-        }
+    public void execute(String args) {
+        this.receiver.help();
     }
 }

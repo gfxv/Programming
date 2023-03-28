@@ -5,6 +5,6 @@ import core.exceptions.InvalidInputException;
 public interface Command {
     String getName();
     String getDesc();
-    void execute() throws InvalidInputException;
+    void execute(String args) throws InvalidInputException;
 
 }

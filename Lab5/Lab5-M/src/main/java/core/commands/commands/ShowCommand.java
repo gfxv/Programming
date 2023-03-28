@@ -1,10 +1,8 @@
 package core.commands.commands;
 
 import core.commands.base.Command;
-import core.enteties.Movie;
-import core.system.Storage;
+import core.receivers.CollectionManipulationReceiver;
 
-import java.util.HashSet;
 
 public class ShowCommand implements Command {
     /**
@@ -15,6 +13,12 @@ public class ShowCommand implements Command {
      * Command description
      */
     private String desc = "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении";
+
+    private CollectionManipulationReceiver receiver;
+
+    public ShowCommand(CollectionManipulationReceiver receiver) {
+        this.receiver = receiver;
+    }
 
     /**
      * Getter for name field
@@ -37,22 +41,7 @@ public class ShowCommand implements Command {
      * Prints all elements from the Collection
      */
     @Override
-    public void execute() {
-
-        HashSet<Movie> movies = Storage.getMovies();
-
-        if (movies.isEmpty()) {
-            System.out.println("Collection is empty!");
-            return;
-        }
-
-        for (Movie movie : movies) {
-            String[] movieAsArr = movie.toArray();
-            for (String movie_attr : movieAsArr) {
-                System.out.print(movie_attr + "\t");
-            }
-            System.out.println();
-        }
-
+    public void execute(String args) {
+        this.receiver.show();
     }
 }

@@ -3,7 +3,9 @@ package core.managers;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 
+import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +19,13 @@ public class FileManager {
      */
     private Path filename;
 
+    private File file;
+
+    private String[] headers = {
+            "id", "name", "creationDate", "oscarCount", "goldenPalmCount", "totalBoxOffice", "mpaaRating", "coords_x", "coords_y",
+            "director_name", "director_height", "location_x", "location_y", "location_name"
+    };
+
     /**
      * Constructor;
      * Creates csv file if it not exists with all necessary fields(columns)
@@ -25,11 +34,12 @@ public class FileManager {
      */
     public FileManager(String filename) throws Exception {
         this.filename = Paths.get(filename);
+        if (!Files.exists(this.filename)) {
+            Files.write(this.filename, String.join(",", this.headers).getBytes());
+        }
+
         if (this.getAll().size() == 0) {
-            this.append(new String[]{
-                    "id", "name", "creationDate", "oscarCount", "goldenPalmCount", "totalBoxOffice", "mpaaRating", "coords_x", "coords_y",
-                    "director_name", "director_height", "location_x", "location_y", "location_name"
-            });
+            this.append(this.headers);
         }
     }
 

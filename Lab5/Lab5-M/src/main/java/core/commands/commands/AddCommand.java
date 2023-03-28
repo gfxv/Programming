@@ -5,6 +5,7 @@ import core.commands.base.Command;
 import core.enteties.Movie;
 import core.exceptions.InvalidInputException;
 import core.managers.InputManager;
+import core.receivers.ElementManipulationReceiver;
 import core.system.Storage;
 
 
@@ -19,6 +20,13 @@ public class AddCommand implements Command {
      * Command description
      */
     private String desc = "add {element} : добавить новый элемент в коллекцию";
+
+    ElementManipulationReceiver receiver;
+
+    public AddCommand(ElementManipulationReceiver receiver) {
+        this.receiver = receiver;
+    }
+
 
     /**
      * Getter for name field
@@ -44,12 +52,7 @@ public class AddCommand implements Command {
      * @throws InvalidInputException
      */
     @Override
-    public void execute() throws InvalidInputException {
-
-        InputManager input = new InputManager();
-        try {
-            Movie m = input.getMovie();
-            Storage.addMovie(m);
-        } catch (NullPointerException ignored) {}
+    public void execute(String args) throws InvalidInputException {
+        this.receiver.add();
     }
 }

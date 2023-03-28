@@ -3,6 +3,7 @@ package core.commands.commands;
 import core.commands.base.Command;
 import core.enteties.Movie;
 import core.exceptions.InvalidInputException;
+import core.receivers.ElementManipulationReceiver;
 import core.system.Config;
 import core.system.Storage;
 
@@ -16,6 +17,12 @@ public class RemoveByIdCommand implements Command {
      * Command description
      */
     private String desc = "remove_by_id id : удалить элемент из коллекции по его id";
+
+    private ElementManipulationReceiver receiver;
+
+    public RemoveByIdCommand(ElementManipulationReceiver receiver) {
+        this.receiver = receiver;
+    }
 
     /**
      * Getter for name field
@@ -40,20 +47,7 @@ public class RemoveByIdCommand implements Command {
      * @throws InvalidInputException
      */
     @Override
-    public void execute() throws InvalidInputException {
-        Movie movieToDel = null;
-        for (Movie movie : Storage.getMovies()) {
-            long id;
-            try {
-                id = Long.parseLong(Config.getCmdParam());
-            } catch (NumberFormatException e) {
-                throw new InvalidInputException("ID must be Integer(Long)");
-            }
-            if (id == movie.getId()) {
-                movieToDel = movie;
-                break;
-            }
-        }
-        Storage.getMovies().remove(movieToDel);
+    public void execute(String args) throws InvalidInputException {
+        this.receiver.removeById(args);
     }
 }

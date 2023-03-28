@@ -2,6 +2,7 @@ package core.commands.commands;
 
 import core.commands.base.Command;
 import core.exceptions.InvalidInputException;
+import core.receivers.CollectionManipulationReceiver;
 import core.system.Storage;
 
 public class ClearCommand implements Command {
@@ -13,6 +14,12 @@ public class ClearCommand implements Command {
      * Command description
      */
     private String desc = "clear : очистить коллекцию";
+
+    private CollectionManipulationReceiver receiver;
+
+    public ClearCommand(CollectionManipulationReceiver receiver) {
+        this.receiver = receiver;
+    }
 
     /**
      * Getter for name field
@@ -37,7 +44,7 @@ public class ClearCommand implements Command {
      * @throws InvalidInputException
      */
     @Override
-    public void execute() throws InvalidInputException {
-        Storage.dropStorage();
+    public void execute(String args) throws InvalidInputException {
+        this.receiver.clear();
     }
 }

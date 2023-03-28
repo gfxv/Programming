@@ -3,46 +3,51 @@ package core.system;
 
 import core.commands.base.Command;
 import core.commands.commands.*;
+import core.receivers.CollectionManipulationReceiver;
+import core.receivers.ElementManipulationReceiver;
+import core.receivers.SystemCommandReceiver;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Init {
+public class Invoker {
 
-    /**
-     * Method that sets up all commands
-     */
-    public static void setCommands() {
-        Map<String, Command> commands = new HashMap<>();
+    private static Map<String, Command> commands = new HashMap<>();
 
-        Command AddCommand = new AddCommand();
+    public static void init() {
+
+        SystemCommandReceiver systemCommandReceiver = new SystemCommandReceiver();
+        CollectionManipulationReceiver collectionManipulationReceiver = new CollectionManipulationReceiver();
+        ElementManipulationReceiver elementManipulationReceiver = new ElementManipulationReceiver();
+
+        Command AddCommand = new AddCommand(elementManipulationReceiver);
         commands.put(AddCommand.getName(), AddCommand);
 
-        Command HelpCommand = new HelpCommand();
+        Command HelpCommand = new HelpCommand(systemCommandReceiver);
         commands.put(HelpCommand.getName(), HelpCommand);
 
-        Command ShowCommand = new ShowCommand();
+        Command ShowCommand = new ShowCommand(collectionManipulationReceiver);
         commands.put(ShowCommand.getName(), ShowCommand);
 
-        Command ClearCommand = new ClearCommand();
+        Command ClearCommand = new ClearCommand(collectionManipulationReceiver);
         commands.put(ClearCommand.getName(), ClearCommand);
 
-        Command ExitCommand = new ExitCommand();
+        Command ExitCommand = new ExitCommand(systemCommandReceiver);
         commands.put(ExitCommand.getName(), ExitCommand);
 
-        Command RemoveByIdCommand = new RemoveByIdCommand();
+        Command RemoveByIdCommand = new RemoveByIdCommand(elementManipulationReceiver);
         commands.put(RemoveByIdCommand.getName(), RemoveByIdCommand);
 
-        Command UpdateByIdCommand = new UpdateByIdCommand();
+        Command UpdateByIdCommand = new UpdateByIdCommand(elementManipulationReceiver);
         commands.put(UpdateByIdCommand.getName(), UpdateByIdCommand);
 
-        Command SaveCommand = new SaveCommand();
+        Command SaveCommand = new SaveCommand(collectionManipulationReceiver);
         commands.put(SaveCommand.getName(), SaveCommand);
 
-        Command HistoryCommand = new HistoryCommand();
+        Command HistoryCommand = new HistoryCommand(systemCommandReceiver);
         commands.put(HistoryCommand.getName(), HistoryCommand);
 
-        Command ExecuteScriptCommand = new ExecuteScriptCommand();
+        Command ExecuteScriptCommand = new ExecuteScriptCommand(systemCommandReceiver);
         commands.put(ExecuteScriptCommand.getName(), ExecuteScriptCommand);
 
         Command AddIfMinCommand = new AddIfMinCommand();
@@ -60,11 +65,15 @@ public class Init {
         Command RemoveLowerCommand = new RemoveLowerCommand();
         commands.put(RemoveLowerCommand.getName(), RemoveLowerCommand);
 
-        Command InfoCommand = new InfoCommand();
+        Command InfoCommand = new InfoCommand(systemCommandReceiver);
         commands.put(InfoCommand.getName(), InfoCommand);
 
-        Commands.setCommands(commands);
-
     }
+
+    public static Map<String, Command> getCommands() {
+        return commands;
+    }
+
+
 
 }

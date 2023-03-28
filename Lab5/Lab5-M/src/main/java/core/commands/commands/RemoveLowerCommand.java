@@ -3,6 +3,7 @@ package core.commands.commands;
 import core.commands.base.Command;
 import core.enteties.Movie;
 import core.exceptions.InvalidInputException;
+import core.receivers.ElementManipulationReceiver;
 import core.system.Config;
 import core.system.Storage;
 
@@ -17,6 +18,12 @@ public class RemoveLowerCommand implements Command {
      * Command description
      */
     private String desc = "remove_lower {element} : удалить из коллекции все элементы, меньшие, чем заданный;";
+
+    private ElementManipulationReceiver receiver;
+
+    public RemoveLowerCommand(ElementManipulationReceiver receiver) {
+        this.receiver = receiver;
+    }
 
     /**
      * Getter for name field
@@ -40,38 +47,7 @@ public class RemoveLowerCommand implements Command {
      * @throws InvalidInputException
      */
     @Override
-    public void execute() throws InvalidInputException {
-        HashSet<Movie> newMovies = new HashSet<>();
-        Movie userMovie = null;
-
-        long ID;
-        try {
-            ID = Long.parseLong(Config.getCmdParam());
-        } catch (NumberFormatException e) {
-            throw new InvalidInputException("ID must be Integer(Long)");
-        }
-
-        for (Movie movie : Storage.getMovies()) {
-            if (ID == movie.getId()) {
-                userMovie = movie;
-                break;
-            }
-        }
-
-
-        if (userMovie == null) {
-           throw new InvalidInputException("No such element");
-        }
-
-        // удалить из коллекции все элементы, меньшие, чем заданный
-        for (Movie movie : Storage.getMovies()) {
-            if ((movie.getGoldenPalmCount() + movie.getOscarsCount()) >=
-                    (userMovie.getGoldenPalmCount() + userMovie.getOscarsCount())) {
-                newMovies.add(movie);
-            }
-        }
-
-        Storage.setMovies(newMovies);
-
+    public void execute(String args) throws InvalidInputException {
+        this.receiver.removeLower(args);
     }
 }
