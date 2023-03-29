@@ -5,26 +5,19 @@ import core.receivers.SystemCommandReceiver;
 
 
 public class ExitCommand implements Command {
-    /**
-     * Command name
-     */
+
     private String name = "exit";
-    /**
-     * Command description
-     */
     private String desc = "exit : завершить программу (без сохранения в файл)";
-
-    /**
-     * Getter for name field
-     * @return command name
-     */
-
     private SystemCommandReceiver receiver;
 
     public ExitCommand(SystemCommandReceiver receiver) {
         this.receiver = receiver;
     }
 
+    /**
+     * Getter for name field
+     * @return command name
+     */
     @Override
     public String getName() {
         return this.name;

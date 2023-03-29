@@ -15,6 +15,9 @@ import java.util.Scanner;
 
 public class SystemCommandReceiver {
 
+    /**
+     *  'help' command implementation
+     */
     public void help() {
         System.out.println("Информация по всем командам:");
         for (Command command : Invoker.getCommands().values()) {
@@ -22,15 +25,24 @@ public class SystemCommandReceiver {
         }
     }
 
+    /**
+     *  'info' command implementation
+     */
     public void info() {
         System.out.println("Storage size: " + Storage.getMovies().size());
         System.out.println("Storage type: " + Storage.getMovies().getClass().getSimpleName());
     }
 
+    /**
+     *  'exit' command implementation
+     */
     public void exit() {
         System.exit(0);
     }
 
+    /**
+     *  'history' command implementation
+     */
     public void history() {
         List<String> commands = History.getHistory();
 
@@ -46,6 +58,9 @@ public class SystemCommandReceiver {
         System.out.println();
     }
 
+    /**
+     *  'execute_script' command implementation
+     */
     public void executeScript(String args) {
         File file = new File(args);
         Map<String, Command> commands = Invoker.getCommands();

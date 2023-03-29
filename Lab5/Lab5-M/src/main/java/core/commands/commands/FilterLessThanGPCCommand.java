@@ -1,24 +1,14 @@
 package core.commands.commands;
 
 import core.commands.base.Command;
-import core.enteties.Movie;
 import core.exceptions.InvalidInputException;
 import core.receivers.ElementManipulationReceiver;
-import core.system.Config;
-import core.system.Storage;
 
-import java.util.HashSet;
 
 public class FilterLessThanGPCCommand implements Command {
-    /**
-     * Command name
-     */
-    private String name = "filter_less_than_golden_palm_count";
-    /**
-     * Command description
-     */
-    private String desc = "filter_less_than_golden_palm_count goldenPalmCount : вывести элементы, значение поля goldenPalmCount которых меньше заданного";
 
+    private String name = "filter_less_than_golden_palm_count";
+    private String desc = "filter_less_than_golden_palm_count goldenPalmCount : вывести элементы, значение поля goldenPalmCount которых меньше заданного";
     private ElementManipulationReceiver receiver;
 
     public FilterLessThanGPCCommand(ElementManipulationReceiver receiver) {

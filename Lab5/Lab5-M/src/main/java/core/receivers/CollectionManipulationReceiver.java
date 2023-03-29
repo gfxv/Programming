@@ -9,6 +9,9 @@ import java.util.HashSet;
 
 public class CollectionManipulationReceiver {
 
+    /**
+     *  'show' command implementation
+     */
     public void show() {
         HashSet<Movie> movies = Storage.getMovies();
 
@@ -26,10 +29,16 @@ public class CollectionManipulationReceiver {
         }
     }
 
+    /**
+     *  'clear' command implementation
+     */
     public void clear() {
         Storage.dropStorage();
     }
 
+    /**
+     *  'save' command implementation
+     */
     public void save() {
         FileManager fm = null;
         try {

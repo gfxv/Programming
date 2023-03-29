@@ -1,24 +1,13 @@
 package core.commands.commands;
 
 import core.commands.base.Command;
-import core.enteties.Movie;
 import core.exceptions.InvalidInputException;
 import core.receivers.ElementManipulationReceiver;
-import core.system.Config;
-import core.system.Storage;
-
-import java.util.HashSet;
 
 public class RemoveLowerCommand implements Command {
-    /**
-     * Command name
-     */
-    private String name = "remove_lower";
-    /**
-     * Command description
-     */
-    private String desc = "remove_lower {element} : удалить из коллекции все элементы, меньшие, чем заданный;";
 
+    private String name = "remove_lower";
+    private String desc = "remove_lower {element} : удалить из коллекции все элементы, меньшие, чем заданный;";
     private ElementManipulationReceiver receiver;
 
     public RemoveLowerCommand(ElementManipulationReceiver receiver) {

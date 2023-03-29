@@ -3,18 +3,11 @@ package core.commands.commands;
 import core.commands.base.Command;
 import core.exceptions.InvalidInputException;
 import core.receivers.CollectionManipulationReceiver;
-import core.system.Storage;
 
 public class ClearCommand implements Command {
-    /**
-     * Command name
-     */
-    private String name = "clear";
-    /**
-     * Command description
-     */
-    private String desc = "clear : очистить коллекцию";
 
+    private String name = "clear";
+    private String desc = "clear : очистить коллекцию";
     private CollectionManipulationReceiver receiver;
 
     public ClearCommand(CollectionManipulationReceiver receiver) {

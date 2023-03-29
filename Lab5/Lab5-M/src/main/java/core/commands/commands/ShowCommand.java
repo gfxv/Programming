@@ -5,15 +5,9 @@ import core.receivers.CollectionManipulationReceiver;
 
 
 public class ShowCommand implements Command {
-    /**
-     * Command name
-     */
-    private String name = "show";
-    /**
-     * Command description
-     */
-    private String desc = "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении";
 
+    private String name = "show";
+    private String desc = "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении";
     private CollectionManipulationReceiver receiver;
 
     public ShowCommand(CollectionManipulationReceiver receiver) {

@@ -2,31 +2,20 @@ package core.commands.commands;
 
 
 import core.commands.base.Command;
-import core.enteties.Movie;
 import core.exceptions.InvalidInputException;
-import core.managers.InputManager;
 import core.receivers.ElementManipulationReceiver;
-import core.system.Storage;
+
 
 
 public class AddCommand implements Command {
 
-    /**
-     * Command name
-     */
     private String name = "add";
-
-    /**
-     * Command description
-     */
     private String desc = "add {element} : добавить новый элемент в коллекцию";
-
-    ElementManipulationReceiver receiver;
+    private ElementManipulationReceiver receiver;
 
     public AddCommand(ElementManipulationReceiver receiver) {
         this.receiver = receiver;
     }
-
 
     /**
      * Getter for name field

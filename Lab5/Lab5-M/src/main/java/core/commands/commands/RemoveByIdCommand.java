@@ -1,23 +1,14 @@
 package core.commands.commands;
 
 import core.commands.base.Command;
-import core.enteties.Movie;
 import core.exceptions.InvalidInputException;
 import core.receivers.ElementManipulationReceiver;
-import core.system.Config;
-import core.system.Storage;
 
 
 public class RemoveByIdCommand implements Command {
-    /**
-     * Command name
-     */
-    private String name = "remove_by_id";
-    /**
-     * Command description
-     */
-    private String desc = "remove_by_id id : удалить элемент из коллекции по его id";
 
+    private String name = "remove_by_id";
+    private String desc = "remove_by_id id : удалить элемент из коллекции по его id";
     private ElementManipulationReceiver receiver;
 
     public RemoveByIdCommand(ElementManipulationReceiver receiver) {

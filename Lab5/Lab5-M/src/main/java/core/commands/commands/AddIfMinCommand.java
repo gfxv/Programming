@@ -1,25 +1,14 @@
 package core.commands.commands;
 
 import core.commands.base.Command;
-import core.enteties.Movie;
 import core.exceptions.InvalidInputException;
-import core.managers.InputManager;
 import core.receivers.ElementManipulationReceiver;
-import core.system.Storage;
 
-import java.util.HashSet;
 
 public class AddIfMinCommand implements Command {
 
-    /**
-     * Command name
-     */
     private String name = "add_if_min";
-    /**
-     * Command description
-     */
     private String desc = "add_if_min {element} : добавить новый элемент в коллекцию, если его значение меньше, чем у наименьшего элемента этой коллекции";
-
     private ElementManipulationReceiver receiver;
 
     public AddIfMinCommand(ElementManipulationReceiver receiver) {

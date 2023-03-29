@@ -15,7 +15,9 @@ public class App {
             System.exit(0);
         } else {
             String newValue = args[0];
-            Config.setFilepath(newValue);
+            if (newValue.endsWith(".csv")) {
+                Config.setFilepath(newValue);
+            }
         }
 
         Client client = new Client();

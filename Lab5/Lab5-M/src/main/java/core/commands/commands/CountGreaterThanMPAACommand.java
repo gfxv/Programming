@@ -1,25 +1,14 @@
 package core.commands.commands;
 
 import core.commands.base.Command;
-import core.enteties.Movie;
-import core.enteties.MpaaRating;
 import core.exceptions.InvalidInputException;
 import core.receivers.ElementManipulationReceiver;
-import core.system.Config;
-import core.system.Storage;
 
-import java.util.HashSet;
 
 public class CountGreaterThanMPAACommand implements Command {
-    /**
-     * Command name
-     */
-    private String name = "count_greater_than_mpaa_rating";
-    /**
-     * Command description
-     */
-    private String desc = "count_greater_than_mpaa_rating mpaaRating : вывести количество элементов, значение поля mpaaRating которых больше заданного";
 
+    private String name = "count_greater_than_mpaa_rating";
+    private String desc = "count_greater_than_mpaa_rating mpaaRating : вывести количество элементов, значение поля mpaaRating которых больше заданного";
     private ElementManipulationReceiver receiver;
 
     public CountGreaterThanMPAACommand(ElementManipulationReceiver receiver) {

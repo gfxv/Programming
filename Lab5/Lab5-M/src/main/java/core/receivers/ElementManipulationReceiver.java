@@ -10,6 +10,9 @@ import java.util.HashSet;
 
 public class ElementManipulationReceiver {
 
+    /**
+     *  'add' command implementation
+     */
     public void add() throws InvalidInputException {
         InputManager input = new InputManager();
         try {
@@ -18,6 +21,9 @@ public class ElementManipulationReceiver {
         } catch (NullPointerException ignored) {}
     }
 
+    /**
+     *  'update_by_id' command implementation
+     */
     public void updateById(String args) throws InvalidInputException {
         InputManager input = new InputManager();
         try {
@@ -28,6 +34,9 @@ public class ElementManipulationReceiver {
         } catch (NullPointerException ignored) {}
     }
 
+    /**
+     *  'remove_by_id' command implementation
+     */
     public void removeById(String args) throws InvalidInputException {
         Movie movieToDel = null;
         long id;
@@ -49,6 +58,9 @@ public class ElementManipulationReceiver {
         System.out.printf("No such element with id %s\n", args);
     }
 
+    /**
+     *  'add_if_min' command implementation
+     */
     public void addIfMin() throws InvalidInputException {
         InputManager input = new InputManager();
 
@@ -87,6 +99,9 @@ public class ElementManipulationReceiver {
         } catch (NullPointerException ignored) {}
     }
 
+    /**
+     *  'remove_lower' command implementation
+     */
     public void removeLower(String args) throws InvalidInputException {
         HashSet<Movie> newMovies = new HashSet<>();
         Movie userMovie = null;
@@ -121,6 +136,9 @@ public class ElementManipulationReceiver {
         Storage.setMovies(newMovies);
     }
 
+    /**
+     *  'remove_by_total_box_office' command implementation
+     */
     public void removeByTBO(String args) throws InvalidInputException {
         Movie movieToDel = null;
         for (Movie movie : Storage.getMovies()) {
@@ -139,6 +157,9 @@ public class ElementManipulationReceiver {
         Storage.getMovies().remove(movieToDel);
     }
 
+    /**
+     *  'count_greater_than_mpaa' command implementation
+     */
     public void countGreaterThanMPAA(String args) throws InvalidInputException {
         HashSet<Movie> movies = Storage.getMovies();
 
@@ -165,6 +186,9 @@ public class ElementManipulationReceiver {
         System.out.println();
     }
 
+    /**
+     *  'filter_less_than_GPCC' command implementation
+     */
     public void filterLessThanGPCC(String args) throws InvalidInputException {
         HashSet<Movie> movies = Storage.getMovies();
 
