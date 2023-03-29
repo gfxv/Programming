@@ -30,19 +30,23 @@ public class ElementManipulationReceiver {
 
     public void removeById(String args) throws InvalidInputException {
         Movie movieToDel = null;
+        long id;
+        try {
+            id = Long.parseLong(args);
+        } catch (NumberFormatException e) {
+            throw new InvalidInputException("ID must be Integer(Long)");
+        }
+
         for (Movie movie : Storage.getMovies()) {
-            long id;
-            try {
-                id = Long.parseLong(args);
-            } catch (NumberFormatException e) {
-                throw new InvalidInputException("ID must be Integer(Long)");
-            }
             if (id == movie.getId()) {
                 movieToDel = movie;
-                break;
+                Storage.getMovies().remove(movieToDel);
+                System.out.printf("Movie with id %d was deleted successfully\n", id);
+                return;
             }
         }
-        Storage.getMovies().remove(movieToDel);
+
+        System.out.printf("No such element with id %s\n", args);
     }
 
     public void addIfMin() throws InvalidInputException {
