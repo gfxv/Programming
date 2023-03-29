@@ -34,15 +34,16 @@ public class CollectionManipulationReceiver {
         FileManager fm = null;
         try {
             fm = new FileManager(Config.getFilepath());
-        } catch (Exception ignored) {
-            System.out.println(ignored.getMessage());
-        }
+        } catch (Exception ignored) {}
         for (Movie movie : Storage.getMovies()) {
             try {
                 if (fm != null) {
                     fm.append(movie.toArray());
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                return;
+            }
         }
+        System.out.println("Collection saved to " + Config.getFilepath());
     }
 }
