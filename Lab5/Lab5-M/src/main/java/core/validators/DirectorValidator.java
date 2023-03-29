@@ -1,6 +1,8 @@
 package core.validators;
 
 import core.exceptions.InvalidInputException;
+import core.exceptions.InvalidTypeException;
+import core.exceptions.ParamIsNullException;
 import core.validators.base.EmptyStringValidator;
 import core.validators.base.NotNullValidator;
 
@@ -17,7 +19,7 @@ public class DirectorValidator {
 
         // name validation
         if (!(NotNullValidator.validate(name)) || EmptyStringValidator.validate(name)) {
-            throw new InvalidInputException("Directors name can't be NULL or empty");
+            throw new ParamIsNullException("Directors name can't be NULL or empty");
         }
 
         // height validation
@@ -27,7 +29,7 @@ public class DirectorValidator {
                 throw new InvalidInputException("Invalid height!");
             }
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("Height have to be Integer");
+            throw new InvalidTypeException("Height have to be Integer");
         }
 
     }

@@ -2,6 +2,8 @@ package core.validators;
 
 
 import core.exceptions.InvalidInputException;
+import core.exceptions.InvalidTypeException;
+import core.exceptions.ParamIsNullException;
 
 public class CoordsValidator {
 
@@ -14,7 +16,7 @@ public class CoordsValidator {
     public static void validate(String X, String Y) throws InvalidInputException {
 
         if (X.strip().length() == 0 || Y.strip().length() == 0) {
-            throw new InvalidInputException("X and Y can't be NULL");
+            throw new ParamIsNullException("X and Y can't be NULL");
         }
 
         try {
@@ -23,13 +25,13 @@ public class CoordsValidator {
                 throw new InvalidInputException("X have to > -375");
             }
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("X is not Integer!");
+            throw new InvalidTypeException("X is not Integer!");
         }
 
         try {
             long long_y = Long.parseLong(Y);
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("Y is not Long!");
+            throw new InvalidTypeException("Y is not Long!");
         }
     }
 

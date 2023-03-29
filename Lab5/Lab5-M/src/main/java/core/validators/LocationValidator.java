@@ -1,6 +1,7 @@
 package core.validators;
 
 import core.exceptions.InvalidInputException;
+import core.exceptions.InvalidTypeException;
 
 public class LocationValidator {
 
@@ -23,13 +24,13 @@ public class LocationValidator {
         try {
             int x = Integer.parseInt(coords[0]);
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("X have to be Integer");
+            throw new InvalidTypeException("X have to be Integer");
         }
 
         try {
             int y = Integer.parseInt(coords[1]);
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("Y have to be Integer");
+            throw new InvalidTypeException("Y have to be Integer");
         }
     }
 }

@@ -47,15 +47,15 @@ public class InputManager {
 
         MovieNameValidator.validate(movieName);
 
-        if (!scriptMode) System.out.println("Please, input amount of oscars, amount of golden palm and total box office \n" +
-                "(write 3 values, using space as separator)");
+        if (!scriptMode) System.out.println("Please, input amount of oscars(int), amount of golden palm(int) and total box office(int/float) \n" +
+                "(write 3 values in one line, using space as separator)");
         String[] primitives = input.nextLine().split(" "); // length = 3
 
         PrimitivesValidator.validate(primitives);
 
-        if (!scriptMode) System.out.println("Please, input X Coordinate:");
+        if (!scriptMode) System.out.println("Please, input X Coordinate(int):");
         String coords_x = input.nextLine();
-        if (!scriptMode) System.out.println("Please, input Y Coordinate:");
+        if (!scriptMode) System.out.println("Please, input Y Coordinate(int/long):");
         String coords_y = input.nextLine();
 
         CoordsValidator.validate(coords_x, coords_y);
@@ -75,14 +75,15 @@ public class InputManager {
 
         if (!scriptMode) System.out.println("Please, input directors' name: ");
         String dir_name = input.nextLine();
-        if (!scriptMode) System.out.println("Please, input Directors' height: ");
+        if (!scriptMode) System.out.println("Please, input Directors' height(int/long): ");
         String dir_height = input.nextLine();
 
         DirectorValidator.validate(dir_name, dir_height);
 
         if (!scriptMode) System.out.println("Please, input name of the Location:");
         String loc_name = input.nextLine();
-        if (!scriptMode) System.out.println("Please, input X and Y");
+        if (!scriptMode) System.out.println("Please, input X(int) and Y(int)\n" +
+                "(write 2 values in one line, using space as separator)");
         String[] loc_coords = input.nextLine().split(" ");
 
         LocationValidator.validate(loc_name, loc_coords);

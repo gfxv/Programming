@@ -2,6 +2,7 @@ package core.validators;
 
 
 import core.exceptions.InvalidInputException;
+import core.exceptions.InvalidTypeException;
 
 public class PrimitivesValidator {
 
@@ -24,7 +25,7 @@ public class PrimitivesValidator {
                 throw new InvalidInputException("Invalid amount of oscars!");
             }
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("Amount of oscars have to be Integer");
+            throw new InvalidTypeException("Amount of oscars have to be Integer");
         }
 
         // goldenPalmCount validator
@@ -34,7 +35,7 @@ public class PrimitivesValidator {
                 throw new InvalidInputException("Invalid amount of golden palms!");
             }
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("Amount of golden palms have to be Integer");
+            throw new InvalidTypeException("Amount of golden palms have to be Integer");
         }
 
         // totalBoxOffice validation
@@ -44,7 +45,7 @@ public class PrimitivesValidator {
                 throw new InvalidInputException("Invalid total box office!");
             }
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("Total box office have to be Integer(Float)");
+            throw new InvalidTypeException("Total box office have to be Integer(Float)");
         }
     }
 }

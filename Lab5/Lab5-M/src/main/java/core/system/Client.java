@@ -13,7 +13,6 @@ public class Client {
 
     public Client() {
         Invoker.init();
-
     }
 
     public void run() {
@@ -42,6 +41,8 @@ public class Client {
                     System.out.println("Bye!");
                     System.exit(0);
                 }
+            } else {
+                System.out.println("I don't know such command :(");
             }
             System.out.println();
         }
