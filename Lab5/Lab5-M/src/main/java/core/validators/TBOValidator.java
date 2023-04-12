@@ -12,7 +12,7 @@ public class TBOValidator {
                 throw new InvalidInputException("Total box office can't be < 0!");
             }
         } catch (NumberFormatException e) {
-            throw new InvalidTypeException("Total box office have to be Integer(Float)");
+            throw new InvalidTypeException("Total box office have to be Integer or Float)");
         }
     }
 }

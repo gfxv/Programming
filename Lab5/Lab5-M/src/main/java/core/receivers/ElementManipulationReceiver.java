@@ -6,6 +6,7 @@ import core.exceptions.InvalidInputException;
 import core.exceptions.UniqueElementException;
 import core.managers.InputManager;
 import core.system.Storage;
+import core.validators.TBOValidator;
 
 import java.util.HashSet;
 
@@ -175,6 +176,7 @@ public class ElementManipulationReceiver {
      */
     public void removeByTBO(String args) throws InvalidInputException {
         Movie movieToDel = null;
+        TBOValidator.validate(args);
         for (Movie movie : Storage.getMovies()) {
             float TBO;
             try {
