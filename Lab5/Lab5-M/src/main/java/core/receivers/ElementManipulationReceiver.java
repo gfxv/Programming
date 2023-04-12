@@ -31,6 +31,21 @@ public class ElementManipulationReceiver {
      *  'update_by_id' command implementation
      */
     public void updateById(String args) throws InvalidInputException {
+        long id;
+        try {
+            id = Long.parseLong(args);
+        } catch (NumberFormatException e) {
+            throw new InvalidInputException("ID have to be Integer or Long");
+        }
+
+        boolean found = false;
+        for (Movie m : Storage.getMovies()) {
+            if (id == m.getId().longValue()) {
+                found = true;
+            }
+        }
+
+        if (!found) throw new InvalidInputException("No such ID");
         InputManager input = new InputManager();
         try {
             Movie m = input.getMovie();
@@ -52,7 +67,7 @@ public class ElementManipulationReceiver {
         try {
             id = Long.parseLong(args);
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("ID must be Integer(Long)");
+            throw new InvalidInputException("ID have to be Integer or Long");
         }
 
         for (Movie movie : Storage.getMovies()) {
@@ -129,7 +144,7 @@ public class ElementManipulationReceiver {
         try {
             ID = Long.parseLong(args);
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("ID must be Integer(Long)");
+            throw new InvalidInputException("ID have to be Integer or Long");
         }
 
         for (Movie movie : Storage.getMovies()) {
@@ -165,7 +180,7 @@ public class ElementManipulationReceiver {
             try {
                 TBO = Float.parseFloat(args);
             } catch (NumberFormatException e) {
-                throw new InvalidInputException("TBO must be Float");
+                throw new InvalidInputException("TBO have to be Float");
             }
             if (TBO == movie.getTotalBoxOffice()) {
                 movieToDel = movie;
@@ -220,7 +235,7 @@ public class ElementManipulationReceiver {
         try {
             GPC = Long.parseLong(args);
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("GPC must be Integer(Long)");
+            throw new InvalidInputException("GPC have to be Integer or Long");
         }
 
         for (Movie movie : movies) {

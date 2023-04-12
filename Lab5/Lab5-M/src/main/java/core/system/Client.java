@@ -4,6 +4,8 @@ import core.commands.base.Command;
 import core.exceptions.InvalidInputException;
 
 
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -13,6 +15,7 @@ public class Client {
     public Client() {
         Invoker.init();
         Storage.loadMovies();
+
     }
 
     public void run() {

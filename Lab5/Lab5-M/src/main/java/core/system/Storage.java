@@ -23,12 +23,11 @@ public class Storage {
         if (movies.contains(movie)) {
             throw new UniqueElementException("[E] This movie is already there!");
         }
-//        if (Storage.has(movie)) {
-//            String msg = "[E] ID " + movie.getId() + " have to be unique";
-//            throw new UniqueElementException(msg);
-//        }
+        if (Storage.has(movie)) {
+            String msg = "[E] ID " + movie.getId() + " have to be unique";
+            throw new UniqueElementException(msg);
+        }
         movies.add(movie);
-
     }
 
     /**
@@ -69,7 +68,9 @@ public class Storage {
         try {
             fm = new FileManager(Config.getFilepath());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println("Something is wrong with file");
+            System.exit(0);
+            return;
         }
         List<String[]> records = null;
         try {

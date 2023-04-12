@@ -90,6 +90,7 @@ public class SystemCommandReceiver {
             sc.close();
         }
         catch (FileNotFoundException ignored) {
+            System.out.println("No such file");
         }
 
         InputManager.setScanner(new Scanner(System.in));

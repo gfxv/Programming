@@ -42,14 +42,13 @@ public class Movie {
         this.totalBoxOffice = totalBoxOffice;
         this.mpaaRating = mpaaRating;
         this.director = director;
-
     }
 
     private long genId() {
         long id = System.currentTimeMillis();
         for (Movie m : Storage.getMovies()) {
-            if (m.getId().longValue() == id) {
-                genId();
+            if (m.getId().equals(id)) {
+                return genId();
             }
         }
         return id;
