@@ -5,7 +5,9 @@ import core.managers.FileManager;
 import core.system.Config;
 import core.system.Storage;
 
+import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 
 public class CollectionManipulationReceiver {
 
@@ -44,6 +46,12 @@ public class CollectionManipulationReceiver {
         try {
             fm = new FileManager(Config.getFilepath());
         } catch (Exception ignored) {}
+        try {
+            fm.clearFile();
+        } catch (IOException e) {
+            System.out.println("Oops, something went wrong");
+            return;
+        }
         for (Movie movie : Storage.getMovies()) {
             try {
                 if (fm != null) {

@@ -1,44 +1,21 @@
 package core.enteties;
 
+import core.exceptions.InvalidInputException;
+import core.exceptions.InvalidLengthException;
+import core.validators.*;
+
 import java.time.LocalDate;
 
 public class Movie {
 
-    /**
-     * Movie ID
-     */
     private Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-    /**
-     * Movie Name
-     */
     private String name; //Поле не может быть null, Строка не может быть пустой
-    /**
-     * Movie Coordinates
-     */
     private Coordinates coordinates; //Поле не может быть null
-    /**
-     * Date of creation
-     */
     private LocalDate creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
-    /**
-     * Amount of oscars movie has
-     */
     private int oscarsCount; //Значение поля должно быть больше 0
-    /**
-     * Amount of golden palms movie has
-     */
     private long goldenPalmCount; //Значение поля должно быть больше 0
-    /**
-     * Total box office movie has
-     */
     private float totalBoxOffice; //Значение поля должно быть больше 0
-    /**
-     * MPAA Rating
-     */
     private MpaaRating mpaaRating; //Поле может быть null
-    /**
-     * Director of the movie
-     */
     private Person director; //Поле может быть null
 
 
@@ -85,6 +62,53 @@ public class Movie {
             String.valueOf(dir_loc.getCoords()[0]), String.valueOf(dir_loc.getCoords()[1]), dir_loc.getName()
         };
 
+    }
+
+    public static Movie arrayToMovie(String[] records) throws InvalidInputException {
+        // 0 - id
+        // 1 - name
+        // 2 - creationDate
+        // 3 - oscarCount
+        // 4 - goldenPalmCount
+        // 5 - totalBoxOffice
+        // 6 - mpaaRating
+        // 7 - coords_x
+        // 8 - coords_y
+        // 9 - director_name
+        // 10 - director_height
+        // 11 - location_x
+        // 12 - location_y
+        // 13 - location_name
+        if (records.length != 14) {
+            throw new InvalidLengthException();
+        }
+
+        MovieNameValidator.validate(records[1]);
+        OscarValidator.validate(records[3]);
+        GoldenPalmValidator.validate(records[4]);
+        TBOValidator.validate(records[5]);
+        MpaaValidator.validate(records[6]);
+        CoordsValidator.validate(records[7], records[8]);
+        DirectorValidator.validate(records[9], records[10]);
+        LocationValidator.validate(records[13], new String[]{records[11], records[12]});
+
+        int oscarCounter = Integer.parseInt(records[3]);
+        long palmCounter = Long.parseLong(records[4]);
+        float totalBox = Float.parseFloat(records[5]);
+        Integer x = Integer.parseInt(records[7]);
+        Long y = Long.parseLong(records[8]);
+        long height = Long.parseLong(records[10]);
+        int loc_x = Integer.parseInt(records[11]);
+        int loc_y = Integer.parseInt(records[12]);
+
+        return new Movie(
+                records[1], new Coordinates(x, y), oscarCounter, palmCounter, totalBox,
+                MpaaRating.valueOf(records[6]), new Person(
+                records[9], height, new Location(
+                loc_x, loc_y, records[13]
+                )
+            )
+        );
     }
 
     /**

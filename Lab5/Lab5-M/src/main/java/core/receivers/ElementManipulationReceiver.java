@@ -3,6 +3,7 @@ package core.receivers;
 import core.enteties.Movie;
 import core.enteties.MpaaRating;
 import core.exceptions.InvalidInputException;
+import core.exceptions.UniqueElementException;
 import core.managers.InputManager;
 import core.system.Storage;
 
@@ -19,6 +20,11 @@ public class ElementManipulationReceiver {
             Movie m = input.getMovie();
             Storage.addMovie(m);
         } catch (NullPointerException ignored) {}
+        catch (UniqueElementException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        System.out.println("Movie added successfully!");
     }
 
     /**
@@ -32,6 +38,9 @@ public class ElementManipulationReceiver {
             this.removeById(args);
             Storage.addMovie(m);
         } catch (NullPointerException ignored) {}
+        catch (UniqueElementException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -71,6 +80,11 @@ public class ElementManipulationReceiver {
                 Movie m = input.getMovie();
                 Storage.addMovie(m);
             } catch (NullPointerException ignored) {}
+            catch (UniqueElementException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+            System.out.println("Movie added successfully!");
             return;
         }
 
@@ -97,6 +111,11 @@ public class ElementManipulationReceiver {
             }
 
         } catch (NullPointerException ignored) {}
+        catch (UniqueElementException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        System.out.println("Movie added successfully!");
     }
 
     /**

@@ -17,6 +17,9 @@ public class App {
             String newValue = args[0];
             if (newValue.endsWith(".csv")) {
                 Config.setFilepath(newValue);
+            } else {
+                System.out.println("Invalid file type!");
+                System.exit(0);
             }
         }
 

@@ -10,9 +10,9 @@ import java.util.Scanner;
 
 public class Client {
 
-
     public Client() {
         Invoker.init();
+        Storage.loadMovies();
     }
 
     public void run() {
@@ -40,7 +40,7 @@ public class Client {
                 } catch (NoSuchElementException e) {
                     System.out.println("Bye!");
                     System.exit(0);
-                }
+                } catch (Exception ignore) {}
             } else {
                 System.out.println("I don't know such command :(");
             }

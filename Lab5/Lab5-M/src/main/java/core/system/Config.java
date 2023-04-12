@@ -5,7 +5,7 @@ public class Config {
     /**
      * Path to .csv file
      */
-    private static String DEFAULT_FILEPATH = "src/main/java/default.csv";
+    private static String DEFAULT_FILEPATH = "default.csv";
 
     /**
      * @return Current path to .csv file

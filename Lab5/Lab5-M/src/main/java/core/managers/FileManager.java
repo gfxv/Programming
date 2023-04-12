@@ -2,14 +2,13 @@ package core.managers;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import core.system.Config;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileManager {
@@ -70,5 +69,15 @@ public class FileManager {
         }
     }
 
+    public void clearFile() throws IOException {
+//        BufferedWriter writer = Files.newBufferedWriter(Paths.get(Config.getFilepath()));
+//        writer.write("");
+//        writer.flush();
+        try (CSVWriter writer = new CSVWriter(new FileWriter(this.filename.toString()))) {
+            List<String[]> header = new ArrayList<>();
+            header.add(this.headers);
+            writer.writeAll(header);
+        }
+    }
 
 }

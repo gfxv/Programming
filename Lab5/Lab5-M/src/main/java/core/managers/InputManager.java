@@ -47,11 +47,19 @@ public class InputManager {
 
         MovieNameValidator.validate(movieName);
 
-        if (!scriptMode) System.out.println("Please, input amount of oscars(int), amount of golden palm(int) and total box office(int/float) \n" +
-                "(write 3 values in one line, using space as separator)");
-        String[] primitives = input.nextLine().split(" "); // length = 3
+        if (!scriptMode) System.out.println("Please, input amount of oscars(int)");
+        String oscar = input.nextLine();
+        OscarValidator.validate(oscar);
 
-        PrimitivesValidator.validate(primitives);
+        if (!scriptMode) System.out.println("Please, input amount of golden palms(int)");
+        String goldenPalm = input.nextLine();
+        GoldenPalmValidator.validate(goldenPalm);
+
+        if (!scriptMode) System.out.println("Please, input total box office(int/float)");
+        String tbo = input.nextLine();
+        TBOValidator.validate(tbo);
+
+//        PrimitivesValidator.validate(primitives);
 
         if (!scriptMode) System.out.println("Please, input X Coordinate(int):");
         String coords_x = input.nextLine();
@@ -82,21 +90,22 @@ public class InputManager {
 
         if (!scriptMode) System.out.println("Please, input name of the Location:");
         String loc_name = input.nextLine();
-        if (!scriptMode) System.out.println("Please, input X(int) and Y(int)\n" +
-                "(write 2 values in one line, using space as separator)");
-        String[] loc_coords = input.nextLine().split(" ");
+        if (!scriptMode) System.out.println("Please, input Loc X(int) coordinate");
+        String _loc_x = input.nextLine();
+        if (!scriptMode) System.out.println("Please, input Loc Y(int) coordinate");
+        String _loc_y = input.nextLine();
 
-        LocationValidator.validate(loc_name, loc_coords);
+        LocationValidator.validate(loc_name, new String[]{_loc_x, _loc_y});
 
 
-        int oscarCounter = Integer.parseInt(primitives[0]);
-        long palmCounter = Long.parseLong(primitives[1]);
-        float totalBox = Float.parseFloat(primitives[2]);
+        int oscarCounter = Integer.parseInt(oscar);
+        long palmCounter = Long.parseLong(goldenPalm);
+        float totalBox = Float.parseFloat(tbo);
         Integer x = Integer.parseInt(coords_x);
         Long y = Long.parseLong(coords_y);
         long height = Long.parseLong(dir_height);
-        int loc_x = Integer.parseInt(loc_coords[0]);
-        int loc_y = Integer.parseInt(loc_coords[1]);
+        int loc_x = Integer.parseInt(_loc_x);
+        int loc_y = Integer.parseInt(_loc_y);
 
         this.movie = new Movie(
                 movieName, new Coordinates(x, y), oscarCounter, palmCounter, totalBox,
@@ -106,8 +115,6 @@ public class InputManager {
                 )
             )
         );
-
-
     }
 
     /**

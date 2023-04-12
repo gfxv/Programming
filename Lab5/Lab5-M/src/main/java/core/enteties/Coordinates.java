@@ -1,15 +1,12 @@
 package core.enteties;
 
 
+import core.exceptions.InvalidInputException;
+import core.validators.CoordsValidator;
+
 public class Coordinates {
 
-    /**
-     * X Position
-     */
     private Integer x; //Значение поля должно быть больше -327, Поле не может быть null
-    /**
-     * Y Position
-     */
     private Long y; //Поле не может быть null
 
     /**
@@ -20,6 +17,11 @@ public class Coordinates {
     public Coordinates(Integer x, Long y) {
         this.x = x;
         this.y = y;
+    }
+
+    public static Coordinates arrayToCoords(String[] args) throws InvalidInputException {
+        CoordsValidator.validate(args[0],args[1]);
+        return new Coordinates(Integer.parseInt(args[0]), Long.parseLong(args[1]));
     }
 
     /**
