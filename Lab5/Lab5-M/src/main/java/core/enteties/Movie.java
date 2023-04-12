@@ -2,6 +2,7 @@ package core.enteties;
 
 import core.exceptions.InvalidInputException;
 import core.exceptions.InvalidLengthException;
+import core.system.Storage;
 import core.validators.*;
 
 import java.time.LocalDate;
@@ -32,7 +33,7 @@ public class Movie {
     public Movie(String name, Coordinates coordinates, int oscarsCount, long goldenPalmCount,
                  float totalBoxOffice, MpaaRating mpaaRating, Person director) {
 
-        this.id = System.currentTimeMillis();
+        this.id = genId();
         this.name = name;
         this.coordinates = coordinates;
         this.creationDate = LocalDate.now();
@@ -42,6 +43,16 @@ public class Movie {
         this.mpaaRating = mpaaRating;
         this.director = director;
 
+    }
+
+    private long genId() {
+        long id = System.currentTimeMillis();
+        for (Movie m : Storage.getMovies()) {
+            if (m.getId().longValue() == id) {
+                genId();
+            }
+        }
+        return id;
     }
 
     /**

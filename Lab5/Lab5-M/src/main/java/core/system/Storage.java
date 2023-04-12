@@ -2,7 +2,6 @@ package core.system;
 
 import core.enteties.Movie;
 import core.exceptions.InvalidInputException;
-import core.exceptions.InvalidLengthException;
 import core.exceptions.UniqueElementException;
 import core.managers.FileManager;
 
@@ -22,9 +21,12 @@ public class Storage {
      */
     public static void addMovie(Movie movie) throws UniqueElementException {
         if (movies.contains(movie)) {
-            System.out.println("[E] This movie is already there!");
-            throw new UniqueElementException();
+            throw new UniqueElementException("[E] This movie is already there!");
         }
+//        if (Storage.has(movie)) {
+//            String msg = "[E] ID " + movie.getId() + " have to be unique";
+//            throw new UniqueElementException(msg);
+//        }
         movies.add(movie);
 
     }
@@ -53,8 +55,17 @@ public class Storage {
         movies = _movies;
     }
 
+    private static boolean has(Movie movie) {
+        for (Movie m : movies) {
+            if (m.getId().equals(movie.getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void loadMovies() {
-        FileManager fm = null;
+        FileManager fm;
         try {
             fm = new FileManager(Config.getFilepath());
         } catch (Exception e) {
