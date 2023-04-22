@@ -63,6 +63,10 @@ public class SystemCommandReceiver {
      */
     public void executeScript(String args) {
         File file = new File(args);
+        if (!file.canRead()) {
+            System.out.println("No permission to read");
+            return;
+        }
         Map<String, Command> commands = Invoker.getCommands();
 
         try {

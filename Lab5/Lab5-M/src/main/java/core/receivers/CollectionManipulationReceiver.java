@@ -7,9 +7,9 @@ import core.system.Storage;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 
 public class CollectionManipulationReceiver {
+
 
     /**
      *  'show' command implementation
@@ -47,6 +47,7 @@ public class CollectionManipulationReceiver {
             fm = new FileManager(Config.getFilepath());
         } catch (Exception ignored) {}
         try {
+            assert fm != null;
             fm.clearFile();
         } catch (IOException e) {
             System.out.println("Oops, something went wrong");
@@ -54,9 +55,7 @@ public class CollectionManipulationReceiver {
         }
         for (Movie movie : Storage.getMovies()) {
             try {
-                if (fm != null) {
-                    fm.append(movie.toArray());
-                }
+                fm.append(movie.toArray());
             } catch (Exception ignored) {
                 return;
             }
