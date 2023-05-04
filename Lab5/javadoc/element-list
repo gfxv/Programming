@@ -1,0 +1,10 @@
+unnamed package
+core.commands.base
+core.commands.commands
+core.enteties
+core.exceptions
+core.managers
+core.receivers
+core.system
+core.validators
+core.validators.base
