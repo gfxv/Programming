@@ -3,12 +3,15 @@ package core.commands.commands;
 import core.commands.base.Command;
 import core.exceptions.InvalidInputException;
 import core.receivers.ElementManipulationReceiver;
+import shared.serializables.ServerRequest;
 
 
 public class FilterLessThanGPCCommand implements Command {
 
     private String name = "filter_less_than_golden_palm_count";
     private String desc = "filter_less_than_golden_palm_count goldenPalmCount : вывести элементы, значение поля goldenPalmCount которых меньше заданного";
+    private boolean primitiveArg = true;
+    private boolean complexArg = false;
     private ElementManipulationReceiver receiver;
 
     public FilterLessThanGPCCommand(ElementManipulationReceiver receiver) {
@@ -33,12 +36,20 @@ public class FilterLessThanGPCCommand implements Command {
         return this.desc;
     }
 
+    public boolean isPrimitiveArg() {
+        return primitiveArg;
+    }
+    public boolean isComplexArg() {
+        return complexArg;
+    }
+
     /**
      * Prints element if its goldenPalmCount value is less than given
      * @throws InvalidInputException
      */
     @Override
-    public void execute(String args) throws InvalidInputException {
-        this.receiver.filterLessThanGPCC(args);
+    public String[] execute(ServerRequest req) throws InvalidInputException {
+        return new String[]{};
+//        this.receiver.filterLessThanGPCC(args);
     }
 }

@@ -1,6 +1,8 @@
 package shared.serializables;
 
-public class ServerResponse {
+import java.io.Serializable;
+
+public class ServerResponse implements Serializable {
 
     private boolean errors = false;
     private String errorMessage;

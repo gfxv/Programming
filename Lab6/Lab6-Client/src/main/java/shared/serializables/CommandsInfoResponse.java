@@ -2,17 +2,16 @@ package shared.serializables;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class CommandsInfoResponse implements Serializable {
 
-    private List<CommandInfoObject> commands = new ArrayList<>();
+    private ArrayList<CommandInfoObject> commands = new ArrayList<>();
 
-    public void addCommand(CommandInfoObject command) {
-        commands.add(command);
+    public void setInfo(ArrayList<CommandInfoObject> commands) {
+        this.commands = commands;
     }
 
-    public List<CommandInfoObject> getCommands() {
+    public ArrayList<CommandInfoObject> getCommands() {
         return commands;
     }
 

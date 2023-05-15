@@ -9,6 +9,7 @@ import core.system.Storage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -18,11 +19,16 @@ public class SystemCommandReceiver {
     /**
      *  'help' command implementation
      */
-    public void help() {
+    public String[] help() {
         System.out.println("Информация по всем командам:");
+        String[] result = new String[Invoker.getCommands().size()];
+        int i = 0;
         for (Command command : Invoker.getCommands().values()) {
-            System.out.println(command.getDesc());
+            result[i] = command.getDesc();
+            i++;
         }
+
+        return result;
     }
 
     /**
@@ -84,11 +90,11 @@ public class SystemCommandReceiver {
 
                 if (input.length == 2) userArgs = input[1];
                 if (commands.containsKey(userCommand)) {
-                    try {
-                        History.addCommandToHistory(userCommand);
-                        commands.get(userCommand).execute(userArgs); // input[1] - args
-                    } catch (InvalidInputException ignored) {
-                    }
+//                    try {
+//                        History.addCommandToHistory(userCommand);
+////                        commands.get(userCommand).execute(userArgs); // input[1] - args
+//                    } catch (InvalidInputException ignored) {
+//                    }
                 }
             }
             sc.close();

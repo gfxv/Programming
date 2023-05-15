@@ -23,7 +23,7 @@ public class CommandHandler {
         String userArgs = req.getPrimitiveArg();
         try {
             History.addCommandToHistory(userCommand);
-            String[] res = commands.get(userCommand).execute(userArgs);
+            String[] res = commands.get(userCommand).execute(req);
             ServerResponse serverResponse = new ServerResponse(res);
             return serverResponse;
         } catch (InvalidInputException e) {

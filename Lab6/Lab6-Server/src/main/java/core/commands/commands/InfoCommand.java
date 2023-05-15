@@ -3,12 +3,15 @@ package core.commands.commands;
 import core.commands.base.Command;
 import core.exceptions.InvalidInputException;
 import core.receivers.SystemCommandReceiver;
+import shared.serializables.ServerRequest;
 
 
 public class InfoCommand implements Command {
 
     private String name = "info";
     private String desc = "info : вывести в стандартный поток вывода информацию о коллекции";
+    private boolean primitiveArg = false;
+    private boolean complexArg = false;
     private SystemCommandReceiver receiver;
 
     public InfoCommand(SystemCommandReceiver receiver) {
@@ -32,12 +35,20 @@ public class InfoCommand implements Command {
         return this.desc;
     }
 
+    public boolean isPrimitiveArg() {
+        return primitiveArg;
+    }
+    public boolean isComplexArg() {
+        return complexArg;
+    }
+
     /**
      * Prints info about Collection
      * @throws InvalidInputException
      */
     @Override
-    public void execute(String args) throws InvalidInputException {
-        this.receiver.info();
+    public String[] execute(ServerRequest req) throws InvalidInputException {
+        return new String[]{};
+//        this.receiver.info();
     }
 }

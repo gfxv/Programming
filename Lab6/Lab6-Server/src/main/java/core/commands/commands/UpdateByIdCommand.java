@@ -3,12 +3,15 @@ package core.commands.commands;
 import core.commands.base.Command;
 import core.exceptions.InvalidInputException;
 import core.receivers.ElementManipulationReceiver;
+import shared.serializables.ServerRequest;
 
 
 public class UpdateByIdCommand implements Command {
 
     private String name = "update_by_id";
     private String desc = "update_by_id {element} : обновить значение элемента коллекции, id которого равен заданному";
+    private boolean primitiveArg = true;
+    private boolean complexArg = false;
     private ElementManipulationReceiver receiver;
 
     public UpdateByIdCommand(ElementManipulationReceiver receiver) {
@@ -32,12 +35,20 @@ public class UpdateByIdCommand implements Command {
         return this.desc;
     }
 
+    public boolean isPrimitiveArg() {
+        return primitiveArg;
+    }
+    public boolean isComplexArg() {
+        return complexArg;
+    }
+
     /**
      * Updates the value of the collection element whose id is equal to the given one
      * @throws InvalidInputException
      */
     @Override
-    public void execute(String args) throws InvalidInputException {
-        this.receiver.updateById(args);
+    public String[] execute(ServerRequest req) throws InvalidInputException {
+        return new String[]{};
+//        this.receiver.updateById(args);
     }
 }

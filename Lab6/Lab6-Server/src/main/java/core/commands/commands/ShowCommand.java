@@ -2,12 +2,15 @@ package core.commands.commands;
 
 import core.commands.base.Command;
 import core.receivers.CollectionManipulationReceiver;
+import shared.serializables.ServerRequest;
 
 
 public class ShowCommand implements Command {
 
     private String name = "show";
     private String desc = "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении";
+    private boolean primitiveArg = false;
+    private boolean complexArg = false;
     private CollectionManipulationReceiver receiver;
 
     public ShowCommand(CollectionManipulationReceiver receiver) {
@@ -31,11 +34,19 @@ public class ShowCommand implements Command {
         return this.desc;
     }
 
+    public boolean isPrimitiveArg() {
+        return primitiveArg;
+    }
+    public boolean isComplexArg() {
+        return complexArg;
+    }
+
     /**
      * Prints all elements from the Collection
      */
     @Override
-    public void execute(String args) {
-        this.receiver.show();
+    public String[] execute(ServerRequest req) {
+        return new String[]{};
+//        this.receiver.show();
     }
 }

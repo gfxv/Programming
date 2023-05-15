@@ -2,12 +2,15 @@ package core.commands.commands;
 
 import core.commands.base.Command;
 import core.receivers.SystemCommandReceiver;
+import shared.serializables.ServerRequest;
 
 
 public class HelpCommand implements Command {
 
     private String name = "help";
     private String desc = "help : вывести справку по доступным командам";
+    private boolean primitiveArg = false;
+    private boolean complexArg = false;
     private SystemCommandReceiver receiver;
 
     public HelpCommand(SystemCommandReceiver receiver) {
@@ -32,11 +35,18 @@ public class HelpCommand implements Command {
         return this.desc;
     }
 
+    public boolean isPrimitiveArg() {
+        return primitiveArg;
+    }
+    public boolean isComplexArg() {
+        return complexArg;
+    }
+
     /**
      * Shows info about all available commands
      */
     @Override
-    public void execute(String args) {
-        this.receiver.help();
+    public String[] execute(ServerRequest req) {
+        return this.receiver.help();
     }
 }

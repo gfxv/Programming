@@ -3,11 +3,14 @@ package core.commands.commands;
 import core.commands.base.Command;
 import core.exceptions.InvalidInputException;
 import core.receivers.CollectionManipulationReceiver;
+import shared.serializables.ServerRequest;
 
 public class ClearCommand implements Command {
 
     private String name = "clear";
     private String desc = "clear : очистить коллекцию";
+    private boolean primitiveArg = false;
+    private boolean complexArg = false;
     private CollectionManipulationReceiver receiver;
 
     public ClearCommand(CollectionManipulationReceiver receiver) {
@@ -32,12 +35,20 @@ public class ClearCommand implements Command {
         return this.desc;
     }
 
+    public boolean isPrimitiveArg() {
+        return primitiveArg;
+    }
+    public boolean isComplexArg() {
+        return complexArg;
+    }
+
     /**
      * Clears the Storage (Collection)
      * @throws InvalidInputException
      */
     @Override
-    public void execute(String args) throws InvalidInputException {
-        this.receiver.clear();
+    public String[] execute(ServerRequest req) throws InvalidInputException {
+        return new String[]{};
+//        this.receiver.clear();
     }
 }

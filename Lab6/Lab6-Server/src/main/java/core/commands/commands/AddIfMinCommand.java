@@ -3,12 +3,15 @@ package core.commands.commands;
 import core.commands.base.Command;
 import core.exceptions.InvalidInputException;
 import core.receivers.ElementManipulationReceiver;
+import shared.serializables.ServerRequest;
 
 
 public class AddIfMinCommand implements Command {
 
     private String name = "add_if_min";
     private String desc = "add_if_min {element} : добавить новый элемент в коллекцию, если его значение меньше, чем у наименьшего элемента этой коллекции";
+    private boolean primitiveArg = false;
+    private boolean complexArg = true;
     private ElementManipulationReceiver receiver;
 
     public AddIfMinCommand(ElementManipulationReceiver receiver) {
@@ -33,12 +36,20 @@ public class AddIfMinCommand implements Command {
         return this.desc;
     }
 
+    public boolean isPrimitiveArg() {
+        return primitiveArg;
+    }
+    public boolean isComplexArg() {
+        return complexArg;
+    }
+
     /**
      * Adds new element to the Storage, if its value is the lowest in the collection
      * @throws InvalidInputException
      */
     @Override
-    public void execute(String args) throws InvalidInputException {
-        this.receiver.addIfMin();
+    public String[] execute(ServerRequest req) throws InvalidInputException {
+        return new String[]{};
+//        this.receiver.addIfMin();
     }
 }

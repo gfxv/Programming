@@ -3,12 +3,15 @@ package core.commands.commands;
 import core.commands.base.Command;
 import core.exceptions.InvalidInputException;
 import core.receivers.CollectionManipulationReceiver;
+import shared.serializables.ServerRequest;
 
 
 public class SaveCommand implements Command {
 
     private String name = "save";
     private String desc = "save : сохранить коллекцию в файл";
+    private boolean primitiveArg = false;
+    private boolean complexArg = false;
     private CollectionManipulationReceiver receiver;
 
     public SaveCommand(CollectionManipulationReceiver receiver) {
@@ -32,13 +35,21 @@ public class SaveCommand implements Command {
         return this.desc;
     }
 
+    public boolean isPrimitiveArg() {
+        return primitiveArg;
+    }
+    public boolean isComplexArg() {
+        return complexArg;
+    }
+
     /**
      * Saves Collection to file
      * @throws InvalidInputException
      */
     @Override
-    public void execute(String args) throws InvalidInputException {
-        this.receiver.save();
+    public String[] execute(ServerRequest req) throws InvalidInputException {
+        return new String[]{};
+//        this.receiver.save();
     }
 
 }

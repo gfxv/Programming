@@ -7,6 +7,7 @@ import core.exceptions.UniqueElementException;
 import core.managers.InputManager;
 import core.system.Storage;
 import core.validators.TBOValidator;
+import shared.serializables.ServerRequest;
 
 import java.util.HashSet;
 
@@ -15,17 +16,16 @@ public class ElementManipulationReceiver {
     /**
      *  'add' command implementation
      */
-    public void add() throws InvalidInputException {
-        InputManager input = new InputManager();
+    public String[] add(ServerRequest req) {
         try {
-            Movie m = input.getMovie();
+            Movie m = req.getComplexArg();
             Storage.addMovie(m);
         } catch (NullPointerException ignored) {}
         catch (UniqueElementException e) {
             System.out.println(e.getMessage());
-            return;
+            return null;
         }
-        System.out.println("Movie added successfully!");
+        return new String[]{"Movie added successfully!"};
     }
 
     /**

@@ -2,12 +2,15 @@ package core.commands.commands;
 
 import core.commands.base.Command;
 import core.receivers.SystemCommandReceiver;
+import shared.serializables.ServerRequest;
 
 
 public class ExitCommand implements Command {
 
     private String name = "exit";
     private String desc = "exit : завершить программу (без сохранения в файл)";
+    private boolean primitiveArg = false;
+    private boolean complexArg = false;
     private SystemCommandReceiver receiver;
 
     public ExitCommand(SystemCommandReceiver receiver) {
@@ -32,11 +35,19 @@ public class ExitCommand implements Command {
         return this.desc;
     }
 
+    public boolean isPrimitiveArg() {
+        return primitiveArg;
+    }
+    public boolean isComplexArg() {
+        return complexArg;
+    }
+
     /**
      * Terminates the program (without saving to a file)
      */
     @Override
-    public void execute(String args) {
-        this.receiver.exit();
+    public String[] execute(ServerRequest req) {
+        return new String[]{};
+//        this.receiver.exit();
     }
 }
