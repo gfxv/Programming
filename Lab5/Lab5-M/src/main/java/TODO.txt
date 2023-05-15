@@ -21,17 +21,11 @@
 + save : сохранить коллекцию в файл
 + show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении
 
+(info, exit, history, clear, save, show) :: NO ARGS
+(add, update_by_id, add_if_min) :: Movie
 
 
-16/16
 
-Выборка и сравнение происходит по сумме oscarsCount и goldenPalmCount
-
-!!! Сделать ввод более user friendly
-    ПОФИКСИТЬ ЛОГИ В ВАЛИДАТОРЕ
-
-Client  
-Invoker
-Receiver
 
 Client (request) -> Invoker -> Command : Receiver.showCommand() | Receiver.addCommand() | ...
+
