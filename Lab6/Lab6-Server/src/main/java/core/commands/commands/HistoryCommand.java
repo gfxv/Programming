@@ -1,8 +1,9 @@
 package core.commands.commands;
 
 import core.commands.base.Command;
-import core.exceptions.InvalidInputException;
+import shared.exceptions.InvalidInputException;
 import core.receivers.SystemCommandReceiver;
+import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 
 
@@ -46,8 +47,7 @@ public class HistoryCommand implements Command {
      * @throws InvalidInputException
      */
     @Override
-    public String[] execute(ServerRequest req) throws InvalidInputException {
-        return new String[]{};
-//        this.receiver.history();
+    public ResponseBody execute(ServerRequest req) throws InvalidInputException {
+        return this.receiver.history();
     }
 }

@@ -1,8 +1,9 @@
 package core.commands.commands;
 
 import core.commands.base.Command;
-import core.exceptions.InvalidInputException;
+import shared.exceptions.InvalidInputException;
 import core.receivers.CollectionManipulationReceiver;
+import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 
 public class ClearCommand implements Command {
@@ -47,8 +48,7 @@ public class ClearCommand implements Command {
      * @throws InvalidInputException
      */
     @Override
-    public String[] execute(ServerRequest req) throws InvalidInputException {
-        return new String[]{};
-//        this.receiver.clear();
+    public ResponseBody execute(ServerRequest req) throws InvalidInputException {
+        return this.receiver.clear();
     }
 }

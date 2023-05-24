@@ -2,6 +2,7 @@ package core.commands.commands;
 
 import core.commands.base.Command;
 import core.receivers.SystemCommandReceiver;
+import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 
 
@@ -46,7 +47,7 @@ public class HelpCommand implements Command {
      * Shows info about all available commands
      */
     @Override
-    public String[] execute(ServerRequest req) {
+    public ResponseBody execute(ServerRequest req) {
         return this.receiver.help();
     }
 }

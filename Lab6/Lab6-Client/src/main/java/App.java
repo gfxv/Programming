@@ -1,32 +1,30 @@
-import cli.Client;
-
-import java.io.IOException;
-
+import core.system.Client;
 
 public class App {
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void main(String[] args) {
 
-//         Small args validation
-//        if (args.length > 1) {
-//            System.out.println("Кол-во аргументов > 1");
-//            System.exit(0);
-//        } if (args.length == 0) {
-//            System.out.println("Вы не передали имя файла");
-//            System.exit(0);
-//        } else {
-//            String newValue = args[0];
-//            if (newValue.endsWith(".csv")) {
-//                Config.setFilepath(newValue);
-//            } else {
-//                System.out.println("Invalid file type!");
-//                System.exit(0);
-//            }
-//        }
+        /*
+        ARGS: HOST PORT
+         */
 
+        String HOST = null;
+        int PORT = 0;
 
-        Client client = new Client();
-        client.startConnection("localhost", 9999);
+        if (args.length < 2) {
+            System.out.println("You missed some params (You have to specify HOST and PORT)");
+            System.exit(0);
+        }
+        try {
+            HOST = args[0];
+            PORT = Integer.parseInt(args[1]);
+        } catch (NumberFormatException ignored) {
+            System.out.println("PORT have to be integer");
+            System.exit(0);
+        }
+
+        Client client = new Client(HOST, PORT);
+        client.startConnection();
 
     }
 

@@ -1,107 +1,100 @@
 package core.receivers;
 
-import core.enteties.Movie;
-import core.enteties.MpaaRating;
-import core.exceptions.InvalidInputException;
-import core.exceptions.UniqueElementException;
-import core.managers.InputManager;
+import shared.enteties.Movie;
+import shared.enteties.MpaaRating;
+import shared.exceptions.InvalidInputException;
+import shared.exceptions.UniqueElementException;
 import core.system.Storage;
-import core.validators.TBOValidator;
+import shared.validators.TBOValidator;
+import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 
 import java.util.HashSet;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class ElementManipulationReceiver {
 
     /**
-     *  'add' command implementation
+     * 'add' command implementation
      */
-    public String[] add(ServerRequest req) {
+    public ResponseBody add(ServerRequest req) {
         try {
             Movie m = req.getComplexArg();
             Storage.addMovie(m);
-        } catch (NullPointerException ignored) {}
-        catch (UniqueElementException e) {
-            System.out.println(e.getMessage());
-            return null;
+        } catch (NullPointerException ignored) {
+            ignored.printStackTrace();
+        } catch (UniqueElementException e) {
+            return new ResponseBody(e.getMessage());
         }
-        return new String[]{"Movie added successfully!"};
+        return new ResponseBody(new String[]{"Movie added successfully"});
     }
 
     /**
-     *  'update_by_id' command implementation
+     * 'update_by_id' command implementation
      */
-    public void updateById(String args) throws InvalidInputException {
+    public ResponseBody updateById(ServerRequest req) {
         long id;
         try {
-            id = Long.parseLong(args);
+            id = Long.parseLong(req.getPrimitiveArg());
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("ID have to be Integer or Long");
+            return new ResponseBody("ID have to be Integer or Long");
         }
 
-        boolean found = false;
-        for (Movie m : Storage.getMovies()) {
-            if (id == m.getId().longValue()) {
-                found = true;
-            }
-        }
 
-        if (!found) throw new InvalidInputException("No such ID");
-        InputManager input = new InputManager();
+        boolean found = Storage.getMovies().stream().anyMatch(movie -> id == movie.getId());
+
+        if (!found) return new ResponseBody("No such ID");
         try {
-            Movie m = input.getMovie();
-            m.setId(Long.parseLong(args));
-            this.removeById(args);
+            Movie m = req.getComplexArg();
+            m.setId(id);
+            this.removeById(req);
             Storage.addMovie(m);
-        } catch (NullPointerException ignored) {}
-        catch (UniqueElementException e) {
+        } catch (NullPointerException ignored) {
+        } catch (UniqueElementException e) {
             throw new RuntimeException(e);
         }
+        return new ResponseBody(new String[]{"Movie updated."});
     }
 
     /**
-     *  'remove_by_id' command implementation
+     * 'remove_by_id' command implementation
      */
-    public void removeById(String args) throws InvalidInputException {
-        Movie movieToDel = null;
+    public ResponseBody removeById(ServerRequest req) {
+        Movie movieToDel;
         long id;
         try {
-            id = Long.parseLong(args);
+            id = Long.parseLong(req.getPrimitiveArg());
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("ID have to be Integer or Long");
+            return new ResponseBody("ID have to be Integer or Long");
         }
 
         for (Movie movie : Storage.getMovies()) {
             if (id == movie.getId()) {
                 movieToDel = movie;
                 Storage.getMovies().remove(movieToDel);
-                System.out.printf("Movie with id %d was deleted successfully\n", id);
-                return;
+                return new ResponseBody(new String[]{"Movie with id" + id + "d was deleted successfully"});
             }
         }
-
-        System.out.printf("No such element with id %s\n", args);
+        return new ResponseBody(new String[]{"No such element with id %s\n", req.getPrimitiveArg()});
     }
 
     /**
-     *  'add_if_min' command implementation
+     * 'add_if_min' command implementation
      */
-    public void addIfMin() throws InvalidInputException {
-        InputManager input = new InputManager();
-
+    public ResponseBody addIfMin(ServerRequest req) {
         Movie lowest = null;
         HashSet<Movie> Movies = Storage.getMovies();
         if (Movies.size() == 0) {
             try {
-                Movie m = input.getMovie();
+                Movie m = req.getComplexArg();
                 Storage.addMovie(m);
-            } catch (NullPointerException ignored) {}
-            catch (UniqueElementException e) {
+            } catch (NullPointerException ignored) {
+            } catch (UniqueElementException e) {
                 System.out.println(e.getMessage());
-                return;
+                return new ResponseBody("Element isn't unique");
             }
-            System.out.println("Movie added successfully!");
-            return;
+            return new ResponseBody(new String[]{"Movie added successfully!"});
         }
 
         for (Movie movie : Movies) {
@@ -110,36 +103,29 @@ public class ElementManipulationReceiver {
                 continue;
             }
 
-            if ((movie.getGoldenPalmCount() + movie.getOscarsCount()) <
-                    (lowest.getGoldenPalmCount() + lowest.getOscarsCount())) {
-                lowest = movie;
-            }
+            if (movie.compareTo(lowest) < 0) lowest = movie;
         }
 
         try {
-            Movie m = input.getMovie();
-
+            Movie m = req.getComplexArg();
             assert lowest != null;
-            if (m.getGoldenPalmCount() + m.getOscarsCount() < lowest.getOscarsCount() + lowest.getGoldenPalmCount()) {
+            if (m.compareTo(lowest) < 0) {
                 Storage.addMovie(m);
             } else {
-                System.out.println("Can't add this element, it is not the lowest");
+                return new ResponseBody("Can't add this element, it is not the lowest");
             }
-
-        } catch (NullPointerException ignored) {}
-        catch (UniqueElementException e) {
+        } catch (NullPointerException ignored) {
+            ignored.printStackTrace();
+        } catch (UniqueElementException e) {
             System.out.println(e.getMessage());
-            return;
         }
-        System.out.println("Movie added successfully!");
+        return new ResponseBody(new String[]{"Movie added successfully!"});
     }
 
     /**
-     *  'remove_lower' command implementation
+     * 'remove_lower' command implementation
      */
-    public void removeLower(String args) throws InvalidInputException {
-        HashSet<Movie> newMovies = new HashSet<>();
-        Movie userMovie = null;
+    public ResponseBody removeLower(String args) throws InvalidInputException {
 
         long ID;
         try {
@@ -148,55 +134,52 @@ public class ElementManipulationReceiver {
             throw new InvalidInputException("ID have to be Integer or Long");
         }
 
-        for (Movie movie : Storage.getMovies()) {
-            if (ID == movie.getId()) {
-                userMovie = movie;
-                break;
-            }
+        try {
+            Movie userMovie = Storage.getMovies()
+                    .stream()
+                    .filter(movie -> ID == movie.getId())
+                    .findFirst()
+                    .get();
+
+            HashSet<Movie> newMovies = (HashSet<Movie>) Storage.getMovies()
+                    .stream()
+                    .filter(movie -> movie.compareTo(userMovie) >= 0)
+                    .collect(Collectors.toSet());
+
+            Storage.setMovies(newMovies);
+            return new ResponseBody(newMovies);
+        } catch (NoSuchElementException e) {
+            return new ResponseBody("No element with given ID");
         }
-
-
-        if (userMovie == null) {
-            throw new InvalidInputException("No such element");
-        }
-
-        // удалить из коллекции все элементы, меньшие, чем заданный
-        for (Movie movie : Storage.getMovies()) {
-            if ((movie.getGoldenPalmCount() + movie.getOscarsCount()) >=
-                    (userMovie.getGoldenPalmCount() + userMovie.getOscarsCount())) {
-                newMovies.add(movie);
-            }
-        }
-
-        Storage.setMovies(newMovies);
     }
 
     /**
-     *  'remove_by_total_box_office' command implementation
+     * 'remove_by_total_box_office' command implementation
      */
-    public void removeByTBO(String args) throws InvalidInputException {
-        Movie movieToDel = null;
-        TBOValidator.validate(args);
-        for (Movie movie : Storage.getMovies()) {
-            float TBO;
-            try {
-                TBO = Float.parseFloat(args);
-            } catch (NumberFormatException e) {
-                throw new InvalidInputException("TBO have to be Float");
-            }
-            if (TBO == movie.getTotalBoxOffice()) {
-                movieToDel = movie;
-                break;
-            }
+    public ResponseBody removeByTBO(ServerRequest req) throws InvalidInputException {
+
+        TBOValidator.validate(req.getPrimitiveArg());
+        float TBO;
+        try {
+            TBO = Float.parseFloat(req.getPrimitiveArg());
+        } catch (NumberFormatException e) {
+            return new ResponseBody("TBO have to be Float");
         }
+
+        Movie movieToDel = Storage.getMovies()
+                .stream()
+                .filter(movie -> TBO == movie.getTotalBoxOffice())
+                .findAny()
+                .get();
 
         Storage.getMovies().remove(movieToDel);
+        return new ResponseBody(new String[]{"Movie removed."});
     }
 
     /**
-     *  'count_greater_than_mpaa' command implementation
+     * 'count_greater_than_mpaa' command implementation
      */
-    public void countGreaterThanMPAA(String args) throws InvalidInputException {
+    public ResponseBody countGreaterThanMPAA(String args) {
         HashSet<Movie> movies = Storage.getMovies();
 
         MpaaRating userMpaa = null;
@@ -206,50 +189,36 @@ public class ElementManipulationReceiver {
                 userMpaa = mpaa;
             }
         }
+        if (userMpaa == null) return new ResponseBody("Invalid MPAA Rating");
 
-        if (userMpaa == null) {
-            throw new InvalidInputException("Invalid MPAA Rating");
-        }
+        MpaaRating finalUserMpaa = userMpaa;
+        int counter = movies.stream()
+                .filter(e -> e.getMpaaRating().getValue() > finalUserMpaa.getValue())
+                .toList()
+                .size();
 
-        int counter = 0;
-        for (Movie movie : movies) {
-            if (movie.getMpaaRating().getValue() > userMpaa.getValue()) {
-                counter++;
-            }
-        }
-
-        System.out.printf("There are %d movies with Mpaa Rating greater than %s", counter, userMpaa);
-        System.out.println();
+        String result = "There are " + counter + " movies with Mpaa Rating greater than " + userMpaa;
+        return new ResponseBody(new String[]{result});
     }
 
     /**
-     *  'filter_less_than_GPCC' command implementation
+     * 'filter_less_than_GPCC' command implementation
      */
-    public void filterLessThanGPCC(String args) throws InvalidInputException {
+    public ResponseBody filterLessThanGPCC(String args) {
         HashSet<Movie> movies = Storage.getMovies();
-
-        if (movies.isEmpty()) {
-            System.out.println("Collection is empty!");
-            return;
-        }
-
+        if (movies.isEmpty()) return new ResponseBody(new String[]{"Collection is empty!"});
         long GPC;
         try {
             GPC = Long.parseLong(args);
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("GPC have to be Integer or Long");
+            return new ResponseBody("GPC have to be Integer or Long");
         }
 
-        for (Movie movie : movies) {
-            if (movie.getGoldenPalmCount() < GPC) {
-                String[] movieAsArr = movie.toArray();
-                for (String movie_attr : movieAsArr) {
-                    System.out.print(movie_attr + "\t");
-                }
-                System.out.println();
-            }
+        HashSet<Movie> resultMovies = (HashSet<Movie>) movies.stream()
+                .filter(movie -> movie.getGoldenPalmCount() < GPC)
+                .collect(Collectors.toSet());
 
-        }
+        return new ResponseBody(resultMovies);
     }
 
 }

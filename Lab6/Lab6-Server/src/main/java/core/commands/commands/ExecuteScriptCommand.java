@@ -1,8 +1,9 @@
 package core.commands.commands;
 
 import core.commands.base.Command;
-import core.exceptions.InvalidInputException;
+import shared.exceptions.InvalidInputException;
 import core.receivers.SystemCommandReceiver;
+import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 
 
@@ -10,7 +11,7 @@ public class ExecuteScriptCommand implements Command {
 
     private String name = "execute_script";
     private String desc = "execute_script file_name : считать и исполнить скрипт из указанного файла. В скрипте содержатся команды в таком же виде, в котором их вводит пользователь в интерактивном режиме.";
-    private boolean primitiveArg = false;
+    private boolean primitiveArg = true;
     private boolean complexArg = false;
     private SystemCommandReceiver receiver;
 
@@ -48,8 +49,7 @@ public class ExecuteScriptCommand implements Command {
      * @throws InvalidInputException
      */
     @Override
-    public String[] execute(ServerRequest req) throws InvalidInputException {
-        return new String[]{};
-//        this.receiver.executeScript(args);
+    public ResponseBody execute(ServerRequest req) throws InvalidInputException {
+        return this.receiver.executeScript("args");
     }
 }

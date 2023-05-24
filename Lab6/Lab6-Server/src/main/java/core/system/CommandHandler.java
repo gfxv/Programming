@@ -1,7 +1,8 @@
 package core.system;
 
 import core.commands.base.Command;
-import core.exceptions.InvalidInputException;
+import shared.exceptions.InvalidInputException;
+import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 import shared.serializables.ServerResponse;
 
@@ -23,7 +24,7 @@ public class CommandHandler {
         String userArgs = req.getPrimitiveArg();
         try {
             History.addCommandToHistory(userCommand);
-            String[] res = commands.get(userCommand).execute(req);
+            ResponseBody res = commands.get(userCommand).execute(req);
             ServerResponse serverResponse = new ServerResponse(res);
             return serverResponse;
         } catch (InvalidInputException e) {

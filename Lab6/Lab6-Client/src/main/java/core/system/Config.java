@@ -17,9 +17,9 @@ public class Config {
     /**
      * @param filepath Path to .csv file
      */
-    public static void setFilepath(String filepath) {
-        DEFAULT_FILEPATH = filepath;
-    }
+//    public static void setFilepath(String filepath) {
+//        DEFAULT_FILEPATH = filepath;
+//    }
 
 
 }

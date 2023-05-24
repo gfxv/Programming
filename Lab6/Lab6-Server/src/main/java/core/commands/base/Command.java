@@ -1,6 +1,7 @@
 package core.commands.base;
 
-import core.exceptions.InvalidInputException;
+import shared.exceptions.InvalidInputException;
+import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 
 public interface Command {
@@ -8,6 +9,6 @@ public interface Command {
     String getDesc();
     boolean isPrimitiveArg();
     boolean isComplexArg();
-    String[] execute(ServerRequest req) throws InvalidInputException;
+    ResponseBody execute(ServerRequest req) throws InvalidInputException;
 
 }

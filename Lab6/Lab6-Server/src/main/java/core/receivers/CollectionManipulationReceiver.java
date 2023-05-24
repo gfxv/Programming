@@ -1,9 +1,11 @@
 package core.receivers;
 
-import core.enteties.Movie;
+import shared.enteties.Movie;
 import core.managers.FileManager;
 import core.system.Config;
 import core.system.Storage;
+import shared.serializables.ResponseBody;
+import shared.serializables.ServerRequest;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -14,34 +16,32 @@ public class CollectionManipulationReceiver {
     /**
      *  'show' command implementation
      */
-    public void show() {
+
+    public ResponseBody show(ServerRequest request) {
         HashSet<Movie> movies = Storage.getMovies();
 
         if (movies.isEmpty()) {
-            System.out.println("Collection is empty!");
-            return;
-        }
-
-        for (Movie movie : movies) {
-            String[] movieAsArr = movie.toArray();
-            for (String movie_attr : movieAsArr) {
-                System.out.print(movie_attr + "\t");
-            }
             System.out.println();
+            return new ResponseBody(new String[]{"Collection is empty!"});
         }
+        return new ResponseBody(movies);
     }
 
     /**
      *  'clear' command implementation
      */
-    public void clear() {
+    public ResponseBody clear() {
         Storage.dropStorage();
+        return new ResponseBody(new String[]{"Collection cleared."});
     }
+
 
     /**
      *  'save' command implementation
      */
-    public void save() {
+
+    // TODO: REMOVE SAVE COMMAND FROM CLIENT SIDE
+    public ResponseBody save() {
         FileManager fm = null;
         try {
             fm = new FileManager(Config.getFilepath());
@@ -51,15 +51,13 @@ public class CollectionManipulationReceiver {
             fm.clearFile();
         } catch (IOException e) {
             System.out.println("Oops, something went wrong");
-            return;
         }
         for (Movie movie : Storage.getMovies()) {
             try {
                 fm.append(movie.toArray());
             } catch (Exception ignored) {
-                return;
             }
         }
-        System.out.println("Collection saved to " + Config.getFilepath());
+        return new ResponseBody(new String[]{"Collection saved to " + Config.getFilepath()});
     }
 }

@@ -1,144 +1,86 @@
 package core.managers;
 
-import core.enteties.*;
-import core.exceptions.InvalidInputException;
-import core.validators.*;
+import shared.enteties.Movie;
+import shared.exceptions.InvalidInputException;
+import shared.serializables.CommandInfoObject;
+import shared.serializables.ServerRequest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class InputManager {
 
-    /**
-     * Movie, that we get after user input
-     */
-    private Movie movie;
+    private List<ServerRequest> requests = new ArrayList<>();
 
-    /**
-     * Scanner
-     */
-    private static Scanner input;
-
-    /**
-     * Script Mode (reading from terminal or from file)
-     */
-    private static boolean scriptMode = false;
-
-    /**
-     * Constructor
-     * @throws InvalidInputException
-     */
-    public InputManager () throws InvalidInputException {
-        this.readInput();
-    }
-
-    /**
-     * Reads user input and validates it
-     * @throws InvalidInputException
-     */
-    private void readInput() throws InvalidInputException {
-
-
-        if (input == null) {
-            setScanner(new Scanner(System.in));
-        }
-
-        if (!scriptMode) System.out.println("Please, input movie name: ");
-        String movieName = input.nextLine();
-
-        MovieNameValidator.validate(movieName);
-
-        if (!scriptMode) System.out.println("Please, input amount of oscars(int)");
-        String oscar = input.nextLine();
-        OscarValidator.validate(oscar);
-
-        if (!scriptMode) System.out.println("Please, input amount of golden palms(int)");
-        String goldenPalm = input.nextLine();
-        GoldenPalmValidator.validate(goldenPalm);
-
-        if (!scriptMode) System.out.println("Please, input total box office(int/float)");
-        String tbo = input.nextLine();
-        TBOValidator.validate(tbo);
-
-//        PrimitivesValidator.validate(primitives);
-
-        if (!scriptMode) System.out.println("Please, input X Coordinate(int):");
-        String coords_x = input.nextLine();
-        if (!scriptMode) System.out.println("Please, input Y Coordinate(int/long):");
-        String coords_y = input.nextLine();
-
-        CoordsValidator.validate(coords_x, coords_y);
-
-
-        if (!scriptMode) {
-            System.out.println("Please, choose Mpaa Rating:");
-            for (MpaaRating rating : MpaaRating.values()) {
-                System.out.print(rating + " ");
+    public InputManager(Scanner scanner, List<CommandInfoObject> commands) throws InvalidInputException {
+        System.out.println("Type \"help\" to list all available commands");
+        System.out.print(">>> ");
+        CommandInfoObject command = null;
+        String[] input = scanner.nextLine().split(" ");
+        for (CommandInfoObject cmd : commands) {
+            if (input[0].equals(cmd.getCommand())) {
+                command = cmd;
             }
         }
 
-        if (!scriptMode) System.out.println();
-        String mpaa = input.nextLine();
+        if (command == null) throw new InvalidInputException("Invalid Command");
 
-        MpaaValidator.validate(mpaa);
+        ServerRequest request = null;
 
-        if (!scriptMode) System.out.println("Please, input directors' name: ");
-        String dir_name = input.nextLine();
-        if (!scriptMode) System.out.println("Please, input Directors' height(int/long): ");
-        String dir_height = input.nextLine();
+        if (command.hasPrimitiveArg() && command.hasComplexArg()) {
+            Movie movie = new MovieInputManager(scanner).getMovie();
+            request = new ServerRequest(command.getCommand(), input[1], movie);
+        }
+        if (command.hasPrimitiveArg()) {
+            request = new ServerRequest(command.getCommand(), input[1]);
+        }
+        if (command.hasComplexArg()) {
+            Movie movie = new MovieInputManager(scanner).getMovie();
+            request = new ServerRequest(command.getCommand(), movie);
+        }
+        if (!command.hasPrimitiveArg() && !command.hasComplexArg()) {
+            request = new ServerRequest(command.getCommand());
+        }
 
-        DirectorValidator.validate(dir_name, dir_height);
-
-        if (!scriptMode) System.out.println("Please, input name of the Location:");
-        String loc_name = input.nextLine();
-        if (!scriptMode) System.out.println("Please, input Loc X(int) coordinate");
-        String _loc_x = input.nextLine();
-        if (!scriptMode) System.out.println("Please, input Loc Y(int) coordinate");
-        String _loc_y = input.nextLine();
-
-        LocationValidator.validate(loc_name, new String[]{_loc_x, _loc_y});
-
-
-        int oscarCounter = Integer.parseInt(oscar);
-        long palmCounter = Long.parseLong(goldenPalm);
-        float totalBox = Float.parseFloat(tbo);
-        Integer x = Integer.parseInt(coords_x);
-        Long y = Long.parseLong(coords_y);
-        long height = Long.parseLong(dir_height);
-        int loc_x = Integer.parseInt(_loc_x);
-        int loc_y = Integer.parseInt(_loc_y);
-
-        this.movie = new Movie(
-                movieName, new Coordinates(x, y), oscarCounter, palmCounter, totalBox,
-                MpaaRating.valueOf(mpaa), new Person(
-                    dir_name, height, new Location(
-                        loc_x, loc_y, loc_name
-                )
-            )
-        );
+        requests.add(request);
     }
 
-    /**
-     * Getter for movie
-     * @return movie
-     */
-    public Movie getMovie() {
-        return this.movie;
+    public InputManager(Scanner scanner, List<CommandInfoObject> commands, boolean scriptMode) throws InvalidInputException {
+        CommandInfoObject command = null;
+        MovieInputManager.setScriptMode(scriptMode);
+        while (scanner.hasNext()) {
+            String[] input = scanner.nextLine().split(" ");
+            for (CommandInfoObject cmd : commands) {
+                if (input[0].equals(cmd.getCommand())) {
+                    command = cmd;
+                }
+            }
+
+            if (command == null) throw new InvalidInputException("Invalid Command");
+
+            ServerRequest request;
+
+            if (command.hasPrimitiveArg() && command.hasComplexArg()) {
+                Movie movie = new MovieInputManager(scanner).getMovie();
+                request = new ServerRequest(command.getCommand(), input[1], movie);
+            }
+            if (command.hasPrimitiveArg()) {
+                request = new ServerRequest(command.getCommand(), input[1]);
+            }
+            if (command.hasComplexArg()) {
+                Movie movie = new MovieInputManager(scanner).getMovie();
+                request = new ServerRequest(command.getCommand(), movie);
+            } else {
+                request = new ServerRequest(command.getCommand());
+            }
+
+            requests.add(request);
+            MovieInputManager.setScriptMode(!scriptMode);
+        }
     }
 
-    /**
-     * Setter for scanner
-     * @param scanner
-     */
-    public static void setScanner(Scanner scanner) {
-        input = scanner;
+    public List<ServerRequest> getRequest() {
+        return requests;
     }
-
-    /**
-     * Setter for script mode
-     * @param mode
-     */
-    public static void setScriptMode(boolean mode) {
-        scriptMode = mode;
-    }
-
 }

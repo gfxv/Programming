@@ -13,12 +13,10 @@ public class CommandInfoCollection implements Serializable {
         commandInfoObjects = new ArrayList<>();
         init();
     }
-//    public void addCommandInfoObject(CommandInfoObject commandInfoObject) {
-//        commandInfoObjects.add(commandInfoObject);
-//    }
 
     private void init() {
         for (var entry : Invoker.getCommands().entrySet()) {
+            if (entry.getKey().equals("save")) continue;
             commandInfoObjects.add(new CommandInfoObject(entry.getKey(), entry.getValue().isPrimitiveArg(), entry.getValue().isComplexArg()));
         }
     }

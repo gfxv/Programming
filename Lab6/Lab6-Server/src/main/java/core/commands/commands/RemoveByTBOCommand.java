@@ -1,8 +1,9 @@
 package core.commands.commands;
 
 import core.commands.base.Command;
-import core.exceptions.InvalidInputException;
+import shared.exceptions.InvalidInputException;
 import core.receivers.ElementManipulationReceiver;
+import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 
 
@@ -47,9 +48,8 @@ public class RemoveByTBOCommand  implements Command {
      * @throws InvalidInputException
      */
     @Override
-    public String[] execute(ServerRequest req) throws InvalidInputException {
-        return new String[]{};
-//        this.receiver.removeByTBO(args);
+    public ResponseBody execute(ServerRequest req) throws InvalidInputException {
+        return this.receiver.removeByTBO(req);
     }
 
 }

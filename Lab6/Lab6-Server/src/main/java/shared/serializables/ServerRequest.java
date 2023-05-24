@@ -1,10 +1,11 @@
 package shared.serializables;
 
-import core.enteties.Movie;
+import shared.enteties.Movie;
 
 import java.io.Serializable;
 
 public class ServerRequest implements Serializable {
+    private static final long serialVersionUID = 1;
 
     private String command;
     private String primitiveArg;
@@ -35,6 +36,5 @@ public class ServerRequest implements Serializable {
     public Movie getComplexArg() {
         return this.complexArg;
     }
-
 
 }

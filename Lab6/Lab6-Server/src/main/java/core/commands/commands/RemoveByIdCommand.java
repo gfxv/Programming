@@ -1,8 +1,9 @@
 package core.commands.commands;
 
 import core.commands.base.Command;
-import core.exceptions.InvalidInputException;
+import shared.exceptions.InvalidInputException;
 import core.receivers.ElementManipulationReceiver;
+import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 
 
@@ -11,7 +12,7 @@ public class RemoveByIdCommand implements Command {
     private String name = "remove_by_id";
     private String desc = "remove_by_id id : удалить элемент из коллекции по его id";
     private boolean primitiveArg = true;
-    private boolean complexArg = false;
+    private boolean complexArg = true;
     private ElementManipulationReceiver receiver;
 
     public RemoveByIdCommand(ElementManipulationReceiver receiver) {
@@ -48,8 +49,7 @@ public class RemoveByIdCommand implements Command {
      * @throws InvalidInputException
      */
     @Override
-    public String[] execute(ServerRequest req) throws InvalidInputException {
-        return new String[]{};
-//        this.receiver.removeById(args);
+    public ResponseBody execute(ServerRequest req) throws InvalidInputException {
+        return this.receiver.removeById(req);
     }
 }

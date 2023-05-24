@@ -2,6 +2,7 @@ package core.commands.commands;
 
 import core.commands.base.Command;
 import core.receivers.SystemCommandReceiver;
+import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 
 
@@ -46,8 +47,7 @@ public class ExitCommand implements Command {
      * Terminates the program (without saving to a file)
      */
     @Override
-    public String[] execute(ServerRequest req) {
-        return new String[]{};
-//        this.receiver.exit();
+    public ResponseBody execute(ServerRequest req) {
+        return this.receiver.exit();
     }
 }

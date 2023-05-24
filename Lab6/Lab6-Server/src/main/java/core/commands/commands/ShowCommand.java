@@ -2,6 +2,7 @@ package core.commands.commands;
 
 import core.commands.base.Command;
 import core.receivers.CollectionManipulationReceiver;
+import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 
 
@@ -45,8 +46,7 @@ public class ShowCommand implements Command {
      * Prints all elements from the Collection
      */
     @Override
-    public String[] execute(ServerRequest req) {
-        return new String[]{};
-//        this.receiver.show();
+    public ResponseBody execute(ServerRequest req) {
+        return this.receiver.show(req);
     }
 }

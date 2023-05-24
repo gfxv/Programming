@@ -2,7 +2,6 @@ package core.managers;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import core.system.Config;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -18,7 +17,6 @@ public class FileManager {
      */
     private Path filename;
 
-    private File file;
 
     private String[] headers = {
             "id", "name", "creationDate", "oscarCount", "goldenPalmCount", "totalBoxOffice", "mpaaRating", "coords_x", "coords_y",
@@ -70,9 +68,6 @@ public class FileManager {
     }
 
     public void clearFile() throws IOException {
-//        BufferedWriter writer = Files.newBufferedWriter(Paths.get(Config.getFilepath()));
-//        writer.write("");
-//        writer.flush();
         try (CSVWriter writer = new CSVWriter(new FileWriter(this.filename.toString()))) {
             List<String[]> header = new ArrayList<>();
             header.add(this.headers);

@@ -3,6 +3,7 @@ package shared.serializables;
 import java.io.Serializable;
 
 public class CommandInfoObject implements Serializable {
+    private static final long serialVersionUID = 3;
     private String command;
     private boolean primitiveArg;
     private boolean complexArg;

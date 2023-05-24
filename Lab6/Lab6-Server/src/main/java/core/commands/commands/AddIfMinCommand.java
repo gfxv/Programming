@@ -1,8 +1,9 @@
 package core.commands.commands;
 
 import core.commands.base.Command;
-import core.exceptions.InvalidInputException;
+import shared.exceptions.InvalidInputException;
 import core.receivers.ElementManipulationReceiver;
+import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 
 
@@ -48,8 +49,7 @@ public class AddIfMinCommand implements Command {
      * @throws InvalidInputException
      */
     @Override
-    public String[] execute(ServerRequest req) throws InvalidInputException {
-        return new String[]{};
-//        this.receiver.addIfMin();
+    public ResponseBody execute(ServerRequest req) throws InvalidInputException {
+        return this.receiver.addIfMin(req);
     }
 }

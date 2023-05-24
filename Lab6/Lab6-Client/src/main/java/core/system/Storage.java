@@ -1,8 +1,8 @@
 package core.system;
 
-import core.enteties.Movie;
-import core.exceptions.InvalidInputException;
-import core.exceptions.UniqueElementException;
+import shared.enteties.Movie;
+import shared.exceptions.InvalidInputException;
+import shared.exceptions.UniqueElementException;
 import core.managers.FileManager;
 
 import java.util.HashSet;
