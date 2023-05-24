@@ -19,16 +19,7 @@ public class Storage {
      * Method to add new Movie to Collection
      * @param movie
      */
-    public static void addMovie(Movie movie) throws UniqueElementException {
-        if (movies.contains(movie)) {
-            throw new UniqueElementException("[E] This movie is already there!");
-        }
-        if (Storage.has(movie)) {
-            String msg = "[E] ID " + movie.getId() + " have to be unique";
-            throw new UniqueElementException(msg);
-        }
-        movies.add(movie);
-    }
+
 
 
     /**
@@ -39,21 +30,7 @@ public class Storage {
         return movies;
     }
 
-    /**
-     * Clears collection
-     */
-    public static void dropStorage() {
-        movies.clear();
-        System.out.println("Collection cleared");
-    }
 
-    /**
-     * Replaces old collection with new one
-     * @param _movies
-     */
-    public static void setMovies(HashSet<Movie> _movies) {
-        movies = _movies;
-    }
 
     private static boolean has(Movie movie) {
         for (Movie m : movies) {
@@ -64,35 +41,4 @@ public class Storage {
         return false;
     }
 
-    public static void loadMovies() {
-        FileManager fm;
-        try {
-            fm = new FileManager(Config.getFilepath());
-        } catch (Exception e) {
-            System.out.println("Something is wrong with file");
-            System.exit(0);
-            return;
-        }
-        List<String[]> records = null;
-        try {
-            records =  fm.getAll();
-        } catch (Exception ignored) {}
-
-        if (records.isEmpty()) {
-            return;
-        }
-
-        for (int i = 0; i < records.size(); i++) {
-            if (i == 0) continue;
-            Movie m;
-            try {
-                m = Movie.arrayToMovie(records.get(i));
-                Storage.addMovie(m);
-            } catch (InvalidInputException ignored) {}
-            catch (UniqueElementException e) {
-                System.out.println(e.getMessage());
-                return;
-            }
-        }
-    }
 }

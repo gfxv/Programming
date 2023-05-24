@@ -50,16 +50,18 @@ public class InputManager {
         CommandInfoObject command = null;
         MovieInputManager.setScriptMode(scriptMode);
         while (scanner.hasNext()) {
-            String[] input = scanner.nextLine().split(" ");
+            String line = scanner.nextLine().trim();
+            if (line.length() == 0) continue;
+            String[] input = line.split(" ");
             for (CommandInfoObject cmd : commands) {
                 if (input[0].equals(cmd.getCommand())) {
                     command = cmd;
                 }
             }
-
             if (command == null) throw new InvalidInputException("Invalid Command");
+            if (command.getCommand().equals("execute_script")) continue;
 
-            ServerRequest request;
+            ServerRequest request = null;
 
             if (command.hasPrimitiveArg() && command.hasComplexArg()) {
                 Movie movie = new MovieInputManager(scanner).getMovie();
@@ -71,7 +73,7 @@ public class InputManager {
             if (command.hasComplexArg()) {
                 Movie movie = new MovieInputManager(scanner).getMovie();
                 request = new ServerRequest(command.getCommand(), movie);
-            } else {
+            } if (!command.hasPrimitiveArg() && !command.hasComplexArg()) {
                 request = new ServerRequest(command.getCommand());
             }
 

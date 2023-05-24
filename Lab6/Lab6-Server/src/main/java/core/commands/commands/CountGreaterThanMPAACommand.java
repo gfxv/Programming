@@ -50,7 +50,7 @@ public class CountGreaterThanMPAACommand implements Command {
      */
     @Override
     public ResponseBody execute(ServerRequest req) throws InvalidInputException {
-        return this.receiver.countGreaterThanMPAA("args");
+        return this.receiver.countGreaterThanMPAA(req);
     }
 
 }

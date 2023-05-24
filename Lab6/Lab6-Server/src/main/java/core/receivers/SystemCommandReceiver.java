@@ -51,16 +51,11 @@ public class SystemCommandReceiver {
         List<String> commands = History.getHistory();
 
         if (commands.size() == 0) {
-//            System.out.println("History is empty");
             return new ResponseBody(new String[]{"History is empty"});
         }
 
-        System.out.println("Last 5 commands:");
-        for (String command : commands) {
-            System.out.println(command);
-        }
         System.out.println();
-        return new ResponseBody(new String[]{"IN DEVELOPMENT"});
+        return new ResponseBody(commands.toArray(String[]::new));
     }
 
     /**

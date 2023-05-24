@@ -38,11 +38,14 @@ public class Executor {
                 ResponseBody response = commands.get(userCommand).execute(request);
                 return new ServerResponse(response);
             } catch (InvalidInputException e) {
-                System.out.println(e.getMessage());
+                e.printStackTrace();
             } catch (NoSuchElementException e) {
-                System.out.println("Bye!");
+                System.out.println(e.getMessage());
                 System.exit(0);
-            } catch (Exception ignore) {}
+            } catch (Exception ignore) {
+            }
+
+
         }
         return new ServerResponse(request.getCommand() + " : " + request.getPrimitiveArg());
     }

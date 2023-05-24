@@ -23,7 +23,7 @@ public class ElementManipulationReceiver {
             Movie m = req.getComplexArg();
             Storage.addMovie(m);
         } catch (NullPointerException ignored) {
-            ignored.printStackTrace();
+//            ignored.printStackTrace();
         } catch (UniqueElementException e) {
             return new ResponseBody(e.getMessage());
         }
@@ -76,7 +76,9 @@ public class ElementManipulationReceiver {
                 return new ResponseBody(new String[]{"Movie with id" + id + "d was deleted successfully"});
             }
         }
-        return new ResponseBody(new String[]{"No such element with id %s\n", req.getPrimitiveArg()});
+
+        return new ResponseBody(new String[]{"No such element with id " + req.getPrimitiveArg()});
+
     }
 
     /**
@@ -125,22 +127,10 @@ public class ElementManipulationReceiver {
     /**
      * 'remove_lower' command implementation
      */
-    public ResponseBody removeLower(String args) throws InvalidInputException {
+    public ResponseBody removeLower(ServerRequest req) {
 
-        long ID;
+        Movie userMovie = req.getComplexArg();
         try {
-            ID = Long.parseLong(args);
-        } catch (NumberFormatException e) {
-            throw new InvalidInputException("ID have to be Integer or Long");
-        }
-
-        try {
-            Movie userMovie = Storage.getMovies()
-                    .stream()
-                    .filter(movie -> ID == movie.getId())
-                    .findFirst()
-                    .get();
-
             HashSet<Movie> newMovies = (HashSet<Movie>) Storage.getMovies()
                     .stream()
                     .filter(movie -> movie.compareTo(userMovie) >= 0)
@@ -156,21 +146,28 @@ public class ElementManipulationReceiver {
     /**
      * 'remove_by_total_box_office' command implementation
      */
-    public ResponseBody removeByTBO(ServerRequest req) throws InvalidInputException {
+    public ResponseBody removeByTBO(ServerRequest req) {
 
-        TBOValidator.validate(req.getPrimitiveArg());
         float TBO;
+        Movie movieToDel;
         try {
+            TBOValidator.validate(req.getPrimitiveArg());
             TBO = Float.parseFloat(req.getPrimitiveArg());
+            movieToDel = Storage.getMovies()
+                    .stream()
+                    .filter(movie -> TBO == movie.getTotalBoxOffice())
+                    .findAny()
+                    .get();
         } catch (NumberFormatException e) {
             return new ResponseBody("TBO have to be Float");
+        } catch (InvalidInputException e) {
+            return new ResponseBody(e.getMessage());
+        } catch (NoSuchElementException e) {
+            return new ResponseBody("No element with given TBO");
+
         }
 
-        Movie movieToDel = Storage.getMovies()
-                .stream()
-                .filter(movie -> TBO == movie.getTotalBoxOffice())
-                .findAny()
-                .get();
+
 
         Storage.getMovies().remove(movieToDel);
         return new ResponseBody(new String[]{"Movie removed."});
@@ -179,13 +176,13 @@ public class ElementManipulationReceiver {
     /**
      * 'count_greater_than_mpaa' command implementation
      */
-    public ResponseBody countGreaterThanMPAA(String args) {
+    public ResponseBody countGreaterThanMPAA(ServerRequest request) {
         HashSet<Movie> movies = Storage.getMovies();
 
         MpaaRating userMpaa = null;
 
         for (MpaaRating mpaa : MpaaRating.values()) {
-            if (mpaa.name().equals(args)) {
+            if (mpaa.name().equals(request.getPrimitiveArg())) {
                 userMpaa = mpaa;
             }
         }
@@ -197,19 +194,19 @@ public class ElementManipulationReceiver {
                 .toList()
                 .size();
 
-        String result = "There are " + counter + " movies with Mpaa Rating greater than " + userMpaa;
+        String result = "There are " + counter + " movie(s) with Mpaa Rating greater than " + userMpaa;
         return new ResponseBody(new String[]{result});
     }
 
     /**
      * 'filter_less_than_GPCC' command implementation
      */
-    public ResponseBody filterLessThanGPCC(String args) {
+    public ResponseBody filterLessThanGPCC(ServerRequest req) {
         HashSet<Movie> movies = Storage.getMovies();
         if (movies.isEmpty()) return new ResponseBody(new String[]{"Collection is empty!"});
         long GPC;
         try {
-            GPC = Long.parseLong(args);
+            GPC = Long.parseLong(req.getPrimitiveArg());
         } catch (NumberFormatException e) {
             return new ResponseBody("GPC have to be Integer or Long");
         }

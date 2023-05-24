@@ -60,4 +60,6 @@ public class CollectionManipulationReceiver {
         }
         return new ResponseBody(new String[]{"Collection saved to " + Config.getFilepath()});
     }
+
+
 }

@@ -43,14 +43,14 @@ public class Client {
 
     public void startConnection() {
 
-
-
         Scanner scanner = new Scanner(System.in);
 
         // Список всех команд
         List<CommandInfoObject> commands;
         ServerRequest firstConnection = new ServerRequest("connection");
         commands = sendRequest(firstConnection).getCommands();
+
+        System.out.println("You're connected to the server!");
 
         while (true) {
             try {
@@ -90,6 +90,9 @@ public class Client {
 
             } catch (InvalidInputException e) {
                 System.out.println(e.getMessage());
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println(e.getMessage());
+                System.out.println("You missed some params!");
             }
         }
     }

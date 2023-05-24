@@ -7,6 +7,7 @@ import shared.validators.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class Movie implements Serializable, Comparable {
 
@@ -54,13 +55,15 @@ public class Movie implements Serializable, Comparable {
     }
 
     private long genId() {
-        long id = System.currentTimeMillis();
-        for (Movie m : Storage.getMovies()) {
-            if (m.getId().equals(id)) {
-                return genId();
-            }
-        }
-        return id;
+//        long id = System.currentTimeMillis();
+//        for (Movie m : Storage.getMovies()) {
+//            if (m.getId().equals(id)) {
+//                return genId();
+//            }
+//        }
+//        return id;
+
+        return UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
     }
 
     /**
@@ -126,8 +129,8 @@ public class Movie implements Serializable, Comparable {
                 MpaaRating.valueOf(records[6]), new Person(
                 records[9], height, new Location(
                 loc_x, loc_y, records[13]
-        )
-        )
+                )
+            )
         );
     }
 

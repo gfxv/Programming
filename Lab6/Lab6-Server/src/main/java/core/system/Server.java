@@ -93,8 +93,8 @@ public class Server {
             sendResponse(channel, response);
             channel.register(selector, SelectionKey.OP_WRITE, ServerSideSerializer.serialize(response));
         } catch (IOException e) {
-//            e.printStackTrace(); // to get serialVersionUID
-            System.out.println("Client disconnected");
+            e.printStackTrace(); // to get serialVersionUID
+//            System.out.println("Client disconnected");
             channel.close();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);

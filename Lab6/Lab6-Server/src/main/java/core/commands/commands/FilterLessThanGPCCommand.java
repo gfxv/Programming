@@ -50,6 +50,6 @@ public class FilterLessThanGPCCommand implements Command {
      */
     @Override
     public ResponseBody execute(ServerRequest req) throws InvalidInputException {
-        return this.receiver.filterLessThanGPCC("args");
+        return this.receiver.filterLessThanGPCC(req);
     }
 }

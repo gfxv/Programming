@@ -9,7 +9,7 @@ import shared.serializables.ServerRequest;
 public class RemoveLowerCommand implements Command {
 
     private String name = "remove_lower";
-    private String desc = "remove_lower {element} : удалить из коллекции все элементы, меньшие, чем заданный;";
+    private String desc = "remove_lower id : удалить из коллекции все элементы, меньшие, чем заданный;";
     private boolean primitiveArg = false;
     private boolean complexArg = true;
     private ElementManipulationReceiver receiver;
@@ -48,6 +48,6 @@ public class RemoveLowerCommand implements Command {
      */
     @Override
     public ResponseBody execute(ServerRequest req) throws InvalidInputException {
-        return this.receiver.removeLower("args");
+        return this.receiver.removeLower(req);
     }
 }
