@@ -82,9 +82,7 @@ public class Client {
                         }
                     }
                     ServerResponse response = sendRequest(request);
-                    if (response.hasErrors()) {
-                        System.out.println(response.getErrorMessage());
-                    }
+
                     printResponse(response.getResponse());
                 });
 
@@ -106,10 +104,11 @@ public class Client {
             client.read(response);
             return ClientSideSerializer.deserialize(response);
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-//            System.out.println("Server is not available");
+//            e.printStackTrace();
+            System.out.println("Server is not available");
+            System.exit(0);
+            return new ServerResponse(new ResponseBody(""));
         }
-        return new ServerResponse("Something went wrong");
     }
 
 
