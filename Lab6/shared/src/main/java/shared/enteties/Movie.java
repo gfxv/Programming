@@ -2,14 +2,13 @@ package shared.enteties;
 
 import shared.exceptions.InvalidInputException;
 import shared.exceptions.InvalidLengthException;
-import core.system.Storage;
 import shared.validators.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class Movie implements Serializable {
+public class Movie implements Serializable, Comparable<Movie> {
 
     private static final long serialVersionUID = 5;
 
@@ -31,6 +30,7 @@ public class Movie implements Serializable {
 
     /**
      * Constructor
+     *
      * @param name
      * @param coordinates
      * @param oscarsCount
@@ -67,6 +67,7 @@ public class Movie implements Serializable {
 
     /**
      * Returns movie object as array
+     *
      * @return array of movie values
      */
     public String[] toArray() {
@@ -76,11 +77,11 @@ public class Movie implements Serializable {
 
 
         return new String[]{
-            String.valueOf(this.id),  this.name, String.valueOf(this.creationDate), String.valueOf(this.oscarsCount),
-            String.valueOf(this.goldenPalmCount), String.valueOf(this.totalBoxOffice), String.valueOf(mpaaRating),
-            String.valueOf(coords[0]), String.valueOf(coords[1]), this.director.getName(),
-            String.valueOf(this.director.getHeight()),
-            String.valueOf(dir_loc.getCoords()[0]), String.valueOf(dir_loc.getCoords()[1]), dir_loc.getName()
+                String.valueOf(this.id), this.name, String.valueOf(this.creationDate), String.valueOf(this.oscarsCount),
+                String.valueOf(this.goldenPalmCount), String.valueOf(this.totalBoxOffice), String.valueOf(mpaaRating),
+                String.valueOf(coords[0]), String.valueOf(coords[1]), this.director.getName(),
+                String.valueOf(this.director.getHeight()),
+                String.valueOf(dir_loc.getCoords()[0]), String.valueOf(dir_loc.getCoords()[1]), dir_loc.getName()
         };
 
     }
@@ -127,13 +128,14 @@ public class Movie implements Serializable {
                 MpaaRating.valueOf(records[6]), new Person(
                 records[9], height, new Location(
                 loc_x, loc_y, records[13]
-                )
-            )
+        )
+        )
         );
     }
 
     /**
      * Getter for ID
+     *
      * @return id
      */
     public Long getId() {
@@ -142,6 +144,7 @@ public class Movie implements Serializable {
 
     /**
      * Setter for id
+     *
      * @param id
      */
     public void setId(Long id) {
@@ -150,6 +153,7 @@ public class Movie implements Serializable {
 
     /**
      * Getter for oscarsCount
+     *
      * @return oscarsCount
      */
     public int getOscarsCount() {
@@ -158,6 +162,7 @@ public class Movie implements Serializable {
 
     /**
      * Setter for oscarsCount
+     *
      * @param oscar
      */
     public void setOscarsCount(int oscar) {
@@ -166,6 +171,7 @@ public class Movie implements Serializable {
 
     /**
      * Getter for goldenPalmCount
+     *
      * @return goldenPalmCount
      */
     public long getGoldenPalmCount() {
@@ -174,6 +180,7 @@ public class Movie implements Serializable {
 
     /**
      * Getter for totalBoxOffice
+     *
      * @return totalBoxOffice
      */
     public float getTotalBoxOffice() {
@@ -182,10 +189,15 @@ public class Movie implements Serializable {
 
     /**
      * Getter for MPAA Rating
+     *
      * @return mpaaRating
      */
     public MpaaRating getMpaaRating() {
         return this.mpaaRating;
+    }
+
+    public String[] getHeaders() {
+        return headers;
     }
 
     @Override
@@ -198,5 +210,13 @@ public class Movie implements Serializable {
             i++;
         }
         return result;
+    }
+
+    @Override
+    public int compareTo(Movie m) {
+        if ((this.getGoldenPalmCount() + this.getOscarsCount()) == (m.getGoldenPalmCount() + m.getOscarsCount()))
+            return 0;
+        return (this.getGoldenPalmCount() + this.getOscarsCount()) >
+                (m.getGoldenPalmCount() + m.getOscarsCount()) ? 1 : -1;
     }
 }

@@ -25,6 +25,12 @@ public class ServerRequest implements Serializable {
         this.complexArg = arg;
     }
 
+    public ServerRequest(String command, String arg, Movie mArg) {
+        this.command = command;
+        this.primitiveArg = arg;
+        this.complexArg = mArg;
+    }
+
     public String getCommand() {
         return this.command;
     }

@@ -24,7 +24,7 @@ public class App {
         }
 
         Client client = new Client(HOST, PORT);
-        client.startConnection();
+        client.run();
 
     }
 

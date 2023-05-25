@@ -20,28 +20,11 @@ public class Client {
     private ByteBuffer byteBuffer = ByteBuffer.allocate(BUFFER_SIZE);
 
     public Client(String host, int port) {
-        try {
-            while (true) {
-                try {
-                    InetSocketAddress address = new InetSocketAddress(host, port);
-                    client = SocketChannel.open();
-                    client.connect(address);
-                    break;
-                } catch (IOException e) {
-                    System.out.println("Reconnecting to server...");
-                    Thread.sleep(5000); // 5 second
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Invalid PORT");
-                    System.exit(0);
-                }
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        startConnection(host, port);
     }
 
 
-    public void startConnection() {
+    public void run() {
 
         Scanner scanner = new Scanner(System.in);
 
@@ -107,10 +90,31 @@ public class Client {
 //            e.printStackTrace();
             System.out.println("Server is not available");
             System.exit(0);
-            return new ServerResponse(new ResponseBody(""));
+            return new ServerResponse(new ResponseBody("Server is not available"));
         }
     }
 
+
+    private void startConnection(String host, int port) {
+        try {
+            while (true) {
+                try {
+                    InetSocketAddress address = new InetSocketAddress(host, port);
+                    client = SocketChannel.open();
+                    client.connect(address);
+                    break;
+                } catch (IOException e) {
+                    System.out.println("Reconnecting to server...");
+                    Thread.sleep(5000); // 5 second
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid PORT");
+                    System.exit(0);
+                }
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void printResponse(ResponseBody response) {
         if (response.getErrorMessage() != null) {

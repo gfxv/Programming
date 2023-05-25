@@ -2,7 +2,6 @@ package shared.enteties;
 
 import shared.exceptions.InvalidInputException;
 import shared.exceptions.InvalidLengthException;
-import core.system.Storage;
 import shared.validators.*;
 
 import java.io.Serializable;

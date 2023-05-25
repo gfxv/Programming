@@ -59,6 +59,9 @@ public class Server {
                     }
                     else if (key.isReadable()) readRequest(key, selector);
                     else if (key.isWritable()) key.channel().register(selector, SelectionKey.OP_READ);
+                    else {
+                        key.channel().close();
+                    }
 
                     selector.selectedKeys().remove(key);
                 }
@@ -81,6 +84,7 @@ public class Server {
             ServerRequest request = ServerSideSerializer.deserialize(buffer);
 
             if (request.getCommand().equals("connection")) {
+
                 ServerResponse con = new ServerResponse(commandInfoCollection.getCommandInfoObjects());
                 sendResponse(channel, con);
                 buffer.clear();
