@@ -14,6 +14,7 @@ public class App {
 
         if (args.length < 2) {
             System.out.println("You missed some params (You have to specify host and file)");
+            System.exit(0);
         } else {
             String newValue = args[1];
             if (newValue.endsWith(".csv")) {

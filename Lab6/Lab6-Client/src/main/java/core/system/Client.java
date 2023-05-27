@@ -33,6 +33,11 @@ public class Client {
         ServerRequest firstConnection = new ServerRequest("connection");
         commands = sendRequest(firstConnection).getCommands();
 
+        if (commands == null) {
+            System.out.println("Server is busy, try again later.");
+            System.exit(0);
+        }
+
         System.out.println("You're connected to the server!");
 
         while (true) {

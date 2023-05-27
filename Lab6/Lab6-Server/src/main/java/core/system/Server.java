@@ -1,16 +1,14 @@
 package core.system;
 
 import shared.Serializers.ServerSideSerializer;
+import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 import shared.serializables.ServerResponse;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 
 public class Server {
 
@@ -77,6 +75,8 @@ public class Server {
         try {
             int readBytes = channel.read(buffer);
             if (readBytes == -1) {
+                System.out.println("Client disconnected");
+                connectedUser = false;
                 channel.close();
                 return;
             }
@@ -84,21 +84,34 @@ public class Server {
             ServerRequest request = ServerSideSerializer.deserialize(buffer);
 
             if (request.getCommand().equals("connection")) {
-
+                if (connectedUser) {
+                    ServerResponse rejection = new ServerResponse(
+                            new ResponseBody("Server is busy, try again later.")
+                    );
+                    sendResponse(channel, rejection);
+                    buffer.clear();
+                    channel.close();
+//                    channel.register(selector, SelectionKey.OP_WRITE, ServerSideSerializer.serialize(rejection));
+                }
                 ServerResponse con = new ServerResponse(commandInfoCollection.getCommandInfoObjects());
                 sendResponse(channel, con);
                 buffer.clear();
                 channel.register(selector, SelectionKey.OP_WRITE, ServerSideSerializer.serialize(con));
+                connectedUser = true;
                 return;
+            } else if (request.getCommand().equals("exit")) {
+                connectedUser = false;
+                executor.executeCommand(new ServerRequest("save"));
             }
-
             buffer.clear();
             ServerResponse response = executor.executeCommand(request);
             sendResponse(channel, response);
             channel.register(selector, SelectionKey.OP_WRITE, ServerSideSerializer.serialize(response));
+        } catch (ClosedChannelException ignored) {
+            System.out.println("Connection rejected, server is full.");
         } catch (IOException e) {
-            e.printStackTrace(); // to get serialVersionUID
-//            System.out.println("Client disconnected");
+//            e.printStackTrace(); // to get serialVersionUID
+            System.out.println("Client disconnected");
             channel.close();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
