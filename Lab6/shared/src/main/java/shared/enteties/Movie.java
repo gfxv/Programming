@@ -54,13 +54,6 @@ public class Movie implements Serializable, Comparable<Movie> {
     }
 
     private long genId() {
-//        long id = System.currentTimeMillis();
-//        for (Movie m : Storage.getMovies()) {
-//            if (m.getId().equals(id)) {
-//                return genId();
-//            }
-//        }
-//        return id;
 
         return UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
     }
@@ -131,6 +124,10 @@ public class Movie implements Serializable, Comparable<Movie> {
         )
         )
         );
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     /**

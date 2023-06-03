@@ -6,6 +6,7 @@
 /Users/ilya/Desktop/ITMO/Программирование/Lab6/shared/src/main/java/shared/validators/TBOValidator.java
 /Users/ilya/Desktop/ITMO/Программирование/Lab6/shared/src/main/java/shared/validators/base/NotNullValidator.java
 /Users/ilya/Desktop/ITMO/Программирование/Lab6/shared/src/main/java/shared/enteties/Movie.java
+/Users/ilya/Desktop/ITMO/Программирование/Lab6/shared/src/main/java/shared/sort/SortByName.java
 /Users/ilya/Desktop/ITMO/Программирование/Lab6/shared/src/main/java/shared/exceptions/InvalidInputException.java
 /Users/ilya/Desktop/ITMO/Программирование/Lab6/shared/src/main/java/shared/serializables/ServerResponse.java
 /Users/ilya/Desktop/ITMO/Программирование/Lab6/shared/src/main/java/shared/enteties/Person.java

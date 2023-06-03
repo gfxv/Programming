@@ -6,9 +6,11 @@ import core.system.Config;
 import core.system.Storage;
 import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
+import shared.sort.SortByName;
 
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CollectionManipulationReceiver {
 
@@ -18,6 +20,7 @@ public class CollectionManipulationReceiver {
      */
 
     public ResponseBody show(ServerRequest request) {
+        // HashSet<Movie>
         HashSet<Movie> movies = Storage.getMovies();
 
         if (movies.isEmpty()) {

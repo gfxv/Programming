@@ -1,9 +1,11 @@
 package core.system;
 
+import shared.enteties.Movie;
 import shared.exceptions.InvalidInputException;
 import core.managers.InputManager;
 import shared.Serializers.ClientSideSerializer;
 import shared.serializables.*;
+import shared.sort.SortByName;
 
 import java.net.*;
 import java.io.*;
@@ -130,7 +132,9 @@ public class Client {
             Stream.of(response.getpResponse()).forEach(System.out::println);
             return;
         }
-        response.getcResponse().forEach(movie -> System.out.println(movie.toString()));
+        List<Movie> movies = new ArrayList<>(response.getcResponse().stream().toList());
+        movies.sort(new SortByName());
+        movies.forEach(movie -> System.out.println(movie.toString()));
     }
 
     public void closeConnection() {
