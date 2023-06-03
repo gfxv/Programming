@@ -1,2 +1,4 @@
-package core.managers;public class AuthManager {
+package core.managers;
+
+public class AuthManager {
 }
