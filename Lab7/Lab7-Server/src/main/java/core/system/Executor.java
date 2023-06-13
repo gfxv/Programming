@@ -15,19 +15,18 @@ public class Executor {
 
     public Executor() {
         Invoker.init();
-        Storage.loadMovies();
-        // auto save of collection
-        new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(300000); // 300000 - 5 mins
-                    executeCommand(new ServerRequest("save"));
-                    System.out.println("Collection saved");
-                } catch (InterruptedException ignored) {
-                    ignored.printStackTrace();
-                }
-            }
-        }).start();
+//        Storage.loadMovies();
+//        new Thread(() -> {
+//            while (true) {
+//                try {
+//                    Thread.sleep(300000); // 300000 - 5 mins
+//                    executeCommand(new ServerRequest("save"));
+//                    System.out.println("Collection saved");
+//                } catch (InterruptedException ignored) {
+//                    ignored.printStackTrace();
+//                }
+//            }
+//        }).start();
     }
 
     public ServerResponse executeCommand(ServerRequest request) {

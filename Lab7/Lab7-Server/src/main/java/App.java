@@ -1,28 +1,16 @@
-import core.system.Config;
 import core.system.Server;
 
-import java.io.IOException;
+import java.sql.SQLException;
 
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
-        /*
-        ARGS: HOST FILE
+//        ARGS: HOST
 
-         */
-
-        if (args.length < 2) {
-            System.out.println("You missed some params (You have to specify host and file)");
+        if (args.length != 1) {
+            System.out.println("You missed some params (You have to specify host)");
             System.exit(0);
-        } else {
-            String newValue = args[1];
-            if (newValue.endsWith(".csv")) {
-                Config.setFilepath(newValue);
-            } else {
-                System.out.println("Invalid file type!");
-                System.exit(0);
-            }
         }
 
         String host = args[0];

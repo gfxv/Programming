@@ -38,7 +38,6 @@ public class MovieInputManager {
      */
     private void readInput() throws InvalidInputException {
 
-
         if (!scriptMode) System.out.println("Please, input movie name: ");
         String movieName = input.nextLine();
 

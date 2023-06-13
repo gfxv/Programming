@@ -1,16 +1,13 @@
 package core.receivers;
 
+import core.db.crud.MovieCRUD;
 import shared.enteties.Movie;
-import core.managers.FileManager;
 import core.system.Config;
-import core.system.Storage;
 import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
-import shared.sort.SortByName;
 
-import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CollectionManipulationReceiver {
 
@@ -20,49 +17,48 @@ public class CollectionManipulationReceiver {
      */
 
     public ResponseBody show(ServerRequest request) {
-        // HashSet<Movie>
-        HashSet<Movie> movies = Storage.getMovies();
 
-        if (movies.isEmpty()) {
-            System.out.println();
-            return new ResponseBody(new String[]{"Collection is empty!"});
+        HashSet<Movie> movies = null;
+        try {
+            movies = MovieCRUD.getAllMovies(Config.getConnection(), request.getUser());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        if (movies == null) return new ResponseBody(new String[]{"Failed to load collection"});
+        if (movies.isEmpty()) return new ResponseBody(new String[]{"Collection is empty!"});
         return new ResponseBody(movies);
     }
 
     /**
      *  'clear' command implementation
      */
-    public ResponseBody clear() {
-        Storage.dropStorage();
+    public ResponseBody clear(ServerRequest req) {
+        try {
+            MovieCRUD.deleteAll(Config.getConnection(), req.getUser());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return new ResponseBody(new String[]{"Collection cleared."});
     }
 
-
-    /**
-     *  'save' command implementation
-     */
-
-    // TODO: REMOVE SAVE COMMAND FROM CLIENT SIDE
-    public ResponseBody save() {
-        FileManager fm = null;
-        try {
-            fm = new FileManager(Config.getFilepath());
-        } catch (Exception ignored) {}
-        try {
-            assert fm != null;
-            fm.clearFile();
-        } catch (IOException e) {
-            System.out.println("Oops, something went wrong");
-        }
-        for (Movie movie : Storage.getMovies()) {
-            try {
-                fm.append(movie.toArray());
-            } catch (Exception ignored) {
-            }
-        }
-        return new ResponseBody(new String[]{"Collection saved to " + Config.getFilepath()});
-    }
-
-
+//    public ResponseBody save() {
+//        FileManager fm = null;
+//        try {
+//            fm = new FileManager(Config.getFilepath());
+//        } catch (Exception ignored) {}
+//        try {
+//            assert fm != null;
+//            fm.clearFile();
+//        } catch (IOException e) {
+//            System.out.println("Oops, something went wrong");
+//        }
+//        for (Movie movie : Storage.getMovies()) {
+//            try {
+//                fm.append(movie.toArray());
+//            } catch (Exception ignored) {
+//            }
+//        }
+//        return new ResponseBody(new String[]{"Collection saved to " + Config.getFilepath()});
+//    }
 }

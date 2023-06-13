@@ -49,6 +49,6 @@ public class ClearCommand implements Command {
      */
     @Override
     public ResponseBody execute(ServerRequest req) throws InvalidInputException {
-        return this.receiver.clear();
+        return this.receiver.clear(req);
     }
 }

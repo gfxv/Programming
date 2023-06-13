@@ -1,6 +1,8 @@
 package core.system;
 
+import core.managers.AuthManager;
 import shared.enteties.Movie;
+import shared.enteties.User;
 import shared.exceptions.InvalidInputException;
 import core.managers.InputManager;
 import shared.Serializers.ClientSideSerializer;
@@ -25,6 +27,8 @@ public class Client {
         startConnection(host, port);
     }
 
+    private User user;
+
 
     public void run() {
 
@@ -35,10 +39,16 @@ public class Client {
         ServerRequest firstConnection = new ServerRequest("connection");
         commands = sendRequest(firstConnection).getCommands();
 
-        if (commands == null) {
-            System.out.println("Server is busy, try again later.");
-            System.exit(0);
+        AuthManager authData = new AuthManager();
+        ServerRequest authRequest = new ServerRequest("auth", authData.getUser(), authData.getType());
+        ServerResponse authResponse = sendRequest(authRequest);
+        if (authResponse.getUser() != null) {
+            this.user = authResponse.getUser();
+        } else {
+            System.out.println(authResponse.getResponse().getErrorMessage());
+            closeConnection();
         }
+//        printResponse(authResponse.getResponse());
 
         System.out.println("You're connected to the server!");
 
@@ -47,6 +57,7 @@ public class Client {
                 InputManager input = new InputManager(scanner, commands);
                 List<ServerRequest> requests = input.getRequest();
                 requests.forEach(request -> {
+                    request.setUser(this.user);
                     if (request.getCommand().equals("exit")) {
                         ServerResponse exitResponse = sendRequest(request);
                         printResponse(exitResponse.getResponse());
@@ -57,6 +68,7 @@ public class Client {
                             InputManager fileInput = new InputManager(new Scanner(new File(request.getPrimitiveArg())), commands, true);
                             List<ServerRequest> scriptRequests = fileInput.getRequest();
                             scriptRequests.forEach(scriptRequest -> {
+                                scriptRequest.setUser(this.user);
                                 if (scriptRequest.getCommand().equals("exit")) closeConnection();
                                 if (scriptRequest.getCommand().equals("execute_script")) return;
                                 ServerResponse response = sendRequest(scriptRequest);
@@ -79,7 +91,7 @@ public class Client {
             } catch (InvalidInputException e) {
                 System.out.println(e.getMessage());
             } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println(e.getMessage());
+//                System.out.println(e.getMessage());
                 System.out.println("You missed some params!");
             }
         }
@@ -96,7 +108,7 @@ public class Client {
         } catch (IOException | ClassNotFoundException e) {
 //            e.printStackTrace();
             System.out.println("Server is not available");
-            System.exit(0);
+            closeConnection();
             return new ServerResponse(new ResponseBody("Server is not available"));
         }
     }

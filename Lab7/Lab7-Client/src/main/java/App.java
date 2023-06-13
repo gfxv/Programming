@@ -1,3 +1,4 @@
+import core.managers.AuthManager;
 import core.system.Client;
 
 public class App {

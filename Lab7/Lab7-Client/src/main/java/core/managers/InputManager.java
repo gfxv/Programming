@@ -31,19 +31,26 @@ public class InputManager {
         if (command.hasPrimitiveArg() && command.hasComplexArg()) {
             Movie movie = new MovieInputManager(scanner).getMovie();
             request = new ServerRequest(command.getCommand(), input[1], movie);
+            requests.add(request);
+            return;
         }
         if (command.hasPrimitiveArg()) {
             request = new ServerRequest(command.getCommand(), input[1]);
+            requests.add(request);
+            return;
         }
         if (command.hasComplexArg()) {
             Movie movie = new MovieInputManager(scanner).getMovie();
             request = new ServerRequest(command.getCommand(), movie);
+            requests.add(request);
+            return;
         }
         if (!command.hasPrimitiveArg() && !command.hasComplexArg()) {
             request = new ServerRequest(command.getCommand());
+            requests.add(request);
         }
 
-        requests.add(request);
+
     }
 
     public InputManager(Scanner scanner, List<CommandInfoObject> commands, boolean scriptMode) throws InvalidInputException {
@@ -66,20 +73,25 @@ public class InputManager {
             if (command.hasPrimitiveArg() && command.hasComplexArg()) {
                 Movie movie = new MovieInputManager(scanner).getMovie();
                 request = new ServerRequest(command.getCommand(), input[1], movie);
+                requests.add(request);
+                continue;
             }
             if (command.hasPrimitiveArg()) {
                 request = new ServerRequest(command.getCommand(), input[1]);
+                requests.add(request);
+                continue;
             }
             if (command.hasComplexArg()) {
                 Movie movie = new MovieInputManager(scanner).getMovie();
                 request = new ServerRequest(command.getCommand(), movie);
+                requests.add(request);
+                continue;
             } if (!command.hasPrimitiveArg() && !command.hasComplexArg()) {
                 request = new ServerRequest(command.getCommand());
+                requests.add(request);
             }
-
-            requests.add(request);
-            MovieInputManager.setScriptMode(!scriptMode);
         }
+        MovieInputManager.setScriptMode(!scriptMode);
     }
 
     public List<ServerRequest> getRequest() {

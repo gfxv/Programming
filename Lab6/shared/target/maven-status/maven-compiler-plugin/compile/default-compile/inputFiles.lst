@@ -14,6 +14,7 @@
 /Users/ilya/Desktop/ITMO/Программирование/Lab6/shared/src/main/java/shared/validators/DirectorValidator.java
 /Users/ilya/Desktop/ITMO/Программирование/Lab6/shared/src/main/java/shared/serializables/CommandInfoObject.java
 /Users/ilya/Desktop/ITMO/Программирование/Lab6/shared/src/main/java/shared/validators/LocationValidator.java
+/Users/ilya/Desktop/ITMO/Программирование/Lab6/shared/src/main/java/shared/enteties/User.java
 /Users/ilya/Desktop/ITMO/Программирование/Lab6/shared/src/main/java/shared/validators/GoldenPalmValidator.java
 /Users/ilya/Desktop/ITMO/Программирование/Lab6/shared/src/main/java/shared/validators/base/EmptyStringValidator.java
 /Users/ilya/Desktop/ITMO/Программирование/Lab6/shared/src/main/java/shared/exceptions/InvalidNameException.java

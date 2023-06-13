@@ -12,7 +12,7 @@ public class UpdateByIdCommand implements Command {
     private String name = "update_by_id";
     private String desc = "update_by_id {element} : обновить значение элемента коллекции, id которого равен заданному";
     private boolean primitiveArg = true;
-    private boolean complexArg = false;
+    private boolean complexArg = true;
     private ElementManipulationReceiver receiver;
 
     public UpdateByIdCommand(ElementManipulationReceiver receiver) {

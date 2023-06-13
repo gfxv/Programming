@@ -1,24 +1,17 @@
 package core.system;
 
+import java.sql.Connection;
+
 public class Config {
 
-    /**
-     * Path to .csv file
-     */
-    private static String DEFAULT_FILEPATH = "default.csv";
+    private static Connection connection;
 
-    /**
-     * @return Current path to .csv file
-     */
-    public static String getFilepath() {
-        return DEFAULT_FILEPATH;
+    public static Connection getConnection() {
+        return connection;
     }
 
-    /**
-     * @param filepath Path to .csv file
-     */
-    public static void setFilepath(String filepath) {
-        DEFAULT_FILEPATH = filepath;
+    public static void setConnection(Connection conn) {
+        connection = conn;
     }
 
 

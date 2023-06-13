@@ -1,27 +1,39 @@
 package core.system;
 
+import core.managers.AuthManager;
+import core.managers.LogManager;
 import shared.Serializers.ServerSideSerializer;
-import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 import shared.serializables.ServerResponse;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
 
+    private final String dbURL = "jdbc:postgresql://127.0.0.1:5432/studs";
     private CommandInfoCollection commandInfoCollection;
-    private ServerSocketChannel serverSocket;
+    private static ServerSocketChannel serverSocket;
     private Selector selector;
     private Executor executor;
-    private boolean connectedUser = false;
+    private ExecutorService fixedPool;
+    Connection connection;
+    LogManager log;
 
 
-    public Server(String host) {
+    public Server(String host) throws SQLException {
         executor = new Executor();
         commandInfoCollection = new CommandInfoCollection();
+        this.log = new LogManager();
 
         int port = 6666;
         boolean running = false;
@@ -39,9 +51,19 @@ public class Server {
             }
         }
 
+        Properties info = new Properties();
+        try {
+            info.load(new FileInputStream("./src/main/resources/db.cfg"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        connection = DriverManager.getConnection(dbURL, info);
+        Config.setConnection(connection);
+
+        this.fixedPool = Executors.newFixedThreadPool(10);
+
         System.out.printf("Server is up and running on %s:%d\n", host, port);
         System.out.println("Waiting for clients...");
-
     }
 
     public void start() {
@@ -55,7 +77,16 @@ public class Server {
                         channel.register(selector, SelectionKey.OP_READ);
                         System.out.println("New connection!");
                     }
-                    else if (key.isReadable()) readRequest(key, selector);
+                    else if (key.isReadable()) {
+                        Runnable rq = () -> {
+                            try {
+                                readRequest(key, selector);
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                        };
+                        this.fixedPool.execute(rq);
+                    }
                     else if (key.isWritable()) key.channel().register(selector, SelectionKey.OP_READ);
                     else {
                         key.channel().close();
@@ -76,41 +107,39 @@ public class Server {
             int readBytes = channel.read(buffer);
             if (readBytes == -1) {
                 System.out.println("Client disconnected");
-                connectedUser = false;
                 channel.close();
+                return;
+            }
+            if (buffer.position() == 0) {
                 return;
             }
 
             ServerRequest request = ServerSideSerializer.deserialize(buffer);
 
             if (request.getCommand().equals("connection")) {
-                if (connectedUser) {
-                    ServerResponse rejection = new ServerResponse(
-                            new ResponseBody("Server is busy, try again later.")
-                    );
-                    sendResponse(channel, rejection);
-                    buffer.clear();
-                    channel.close();
-//                    channel.register(selector, SelectionKey.OP_WRITE, ServerSideSerializer.serialize(rejection));
-                }
                 ServerResponse con = new ServerResponse(commandInfoCollection.getCommandInfoObjects());
                 sendResponse(channel, con);
                 buffer.clear();
                 channel.register(selector, SelectionKey.OP_WRITE, ServerSideSerializer.serialize(con));
-                connectedUser = true;
                 return;
             } else if (request.getCommand().equals("exit")) {
-                connectedUser = false;
                 executor.executeCommand(new ServerRequest("save"));
+            } else if (request.getCommand().equals("auth")) {
+                ServerResponse auth = new AuthManager(request, connection).auth();
+                sendResponse(channel, auth);
+                buffer.clear();
+                channel.register(selector, SelectionKey.OP_WRITE, ServerSideSerializer.serialize(auth));
+                return;
             }
+
+            log.commandLog(request.getUser(), request.getCommand());
             buffer.clear();
             ServerResponse response = executor.executeCommand(request);
             sendResponse(channel, response);
             channel.register(selector, SelectionKey.OP_WRITE, ServerSideSerializer.serialize(response));
         } catch (ClosedChannelException ignored) {
-            System.out.println("Connection rejected, server is full.");
         } catch (IOException e) {
-//            e.printStackTrace(); // to get serialVersionUID
+            e.printStackTrace(); // to get serialVersionUID
             System.out.println("Client disconnected");
             channel.close();
         } catch (ClassNotFoundException e) {

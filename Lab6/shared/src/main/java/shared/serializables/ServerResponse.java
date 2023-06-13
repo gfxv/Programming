@@ -1,5 +1,7 @@
 package shared.serializables;
 
+import shared.enteties.User;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -10,10 +12,17 @@ public class ServerResponse implements Serializable {
     private String errorMessage;
     private ResponseBody response;
 
+    private User user;
+
     private ArrayList<CommandInfoObject> commands = null;
 
     public ServerResponse(ResponseBody response) {
         this.response = response;
+    }
+
+    public ServerResponse(User user, String errorMessage) {
+        this.user = user;
+        this.errorMessage = errorMessage;
     }
 
     public ServerResponse(String errorMessage) {
@@ -39,6 +48,10 @@ public class ServerResponse implements Serializable {
 
     public ArrayList<CommandInfoObject> getCommands() {
         return commands;
+    }
+
+    public User getUser() {
+        return this.user;
     }
 
 }

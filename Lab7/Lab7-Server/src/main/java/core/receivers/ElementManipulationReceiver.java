@@ -1,14 +1,15 @@
 package core.receivers;
 
+import core.db.crud.MovieCRUD;
+import core.system.Config;
 import shared.enteties.Movie;
 import shared.enteties.MpaaRating;
 import shared.exceptions.InvalidInputException;
-import shared.exceptions.UniqueElementException;
-import core.system.Storage;
 import shared.validators.TBOValidator;
 import shared.serializables.ResponseBody;
 import shared.serializables.ServerRequest;
 
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -20,12 +21,11 @@ public class ElementManipulationReceiver {
      */
     public ResponseBody add(ServerRequest req) {
         try {
-            Movie m = req.getComplexArg();
-            Storage.addMovie(m);
+            MovieCRUD.addMovie(Config.getConnection(), req.getUser(), req.getComplexArg());
         } catch (NullPointerException ignored) {
-//            ignored.printStackTrace();
-        } catch (UniqueElementException e) {
-            return new ResponseBody(e.getMessage());
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return new ResponseBody("Error while adding new movie!");
         }
         return new ResponseBody(new String[]{"Movie added successfully"});
     }
@@ -34,26 +34,33 @@ public class ElementManipulationReceiver {
      * 'update_by_id' command implementation
      */
     public ResponseBody updateById(ServerRequest req) {
-        long id;
+        long id = 0;
         try {
             id = Long.parseLong(req.getPrimitiveArg());
         } catch (NumberFormatException e) {
             return new ResponseBody("ID have to be Integer or Long");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-
-        boolean found = Storage.getMovies().stream().anyMatch(movie -> id == movie.getId());
+        long finalId = id;
+        boolean found = false;
+        try {
+            found = MovieCRUD.getAllMovies(Config.getConnection(), req.getUser())
+                    .stream()
+                    .anyMatch(movie -> finalId == movie.getId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         if (!found) return new ResponseBody("No such ID");
         try {
-            Movie m = req.getComplexArg();
-            m.setId(id);
-            this.removeById(req);
-            Storage.addMovie(m);
+            MovieCRUD.updateById(Config.getConnection(), req.getUser(), req.getComplexArg(), id);
         } catch (NullPointerException ignored) {
-        } catch (UniqueElementException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
         return new ResponseBody(new String[]{"Movie updated."});
     }
 
@@ -61,7 +68,6 @@ public class ElementManipulationReceiver {
      * 'remove_by_id' command implementation
      */
     public ResponseBody removeById(ServerRequest req) {
-        Movie movieToDel;
         long id;
         try {
             id = Long.parseLong(req.getPrimitiveArg());
@@ -69,12 +75,15 @@ public class ElementManipulationReceiver {
             return new ResponseBody("ID have to be Integer or Long");
         }
 
-        for (Movie movie : Storage.getMovies()) {
-            if (id == movie.getId()) {
-                movieToDel = movie;
-                Storage.getMovies().remove(movieToDel);
-                return new ResponseBody(new String[]{"Movie with id" + id + "d was deleted successfully"});
+        try {
+            for (Movie movie : MovieCRUD.getAllMovies(Config.getConnection(), req.getUser())) {
+                if (id == movie.getId()) {
+                    MovieCRUD.removeById(Config.getConnection(), req.getUser(), id);
+                    return new ResponseBody(new String[]{"Movie with id " + id + " was deleted successfully"});
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return new ResponseBody(new String[]{"No such element with id " + req.getPrimitiveArg()});
@@ -86,40 +95,40 @@ public class ElementManipulationReceiver {
      */
     public ResponseBody addIfMin(ServerRequest req) {
         Movie lowest = null;
-        HashSet<Movie> Movies = Storage.getMovies();
-        if (Movies.size() == 0) {
-            try {
-                Movie m = req.getComplexArg();
-                Storage.addMovie(m);
-            } catch (NullPointerException ignored) {
-            } catch (UniqueElementException e) {
-                System.out.println(e.getMessage());
-                return new ResponseBody("Element isn't unique");
+        HashSet<Movie> Movies = null;
+        try {
+            Movies = MovieCRUD.getAllMovies(Config.getConnection(), req.getUser());
+            if (Movies.size() == 0) {
+                MovieCRUD.addMovie(Config.getConnection(), req.getUser(), req.getComplexArg());
+                return new ResponseBody(new String[]{"Movie added successfully!"});
             }
-            return new ResponseBody(new String[]{"Movie added successfully!"});
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
         }
+
 
         for (Movie movie : Movies) {
             if (lowest == null) {
                 lowest = movie;
                 continue;
             }
-
             if (movie.compareTo(lowest) < 0) lowest = movie;
         }
 
         try {
             Movie m = req.getComplexArg();
             assert lowest != null;
-            if (m.compareTo(lowest) < 0) {
-                Storage.addMovie(m);
+            if (m.compareTo(lowest) < 0) { // add if less
+                MovieCRUD.addMovie(Config.getConnection(), req.getUser(), m);
             } else {
                 return new ResponseBody("Can't add this element, it is not the lowest");
             }
         } catch (NullPointerException ignored) {
             ignored.printStackTrace();
-        } catch (UniqueElementException e) {
-            System.out.println(e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return new ResponseBody(new String[]{"Movie added successfully!"});
     }
@@ -131,15 +140,20 @@ public class ElementManipulationReceiver {
 
         Movie userMovie = req.getComplexArg();
         try {
-            HashSet<Movie> newMovies = (HashSet<Movie>) Storage.getMovies()
+            HashSet<Movie> moviesToDel = (HashSet<Movie>) MovieCRUD.getAllMovies(Config.getConnection(), req.getUser())
                     .stream()
-                    .filter(movie -> movie.compareTo(userMovie) >= 0)
+                    .filter(movie -> movie.compareTo(userMovie) < 0)
                     .collect(Collectors.toSet());
-
-            Storage.setMovies(newMovies);
-            return new ResponseBody(newMovies);
-        } catch (NoSuchElementException e) {
-            return new ResponseBody("No element with given ID");
+            moviesToDel.forEach(movie -> {
+                try {
+                    MovieCRUD.removeById(Config.getConnection(), req.getUser(), movie.getId());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
+            return new ResponseBody(MovieCRUD.getAllMovies(Config.getConnection(), req.getUser()));
+        } catch (NoSuchElementException | SQLException e) {
+            return new ResponseBody("AHTUNG AHTUNG!");
         }
     }
 
@@ -153,7 +167,7 @@ public class ElementManipulationReceiver {
         try {
             TBOValidator.validate(req.getPrimitiveArg());
             TBO = Float.parseFloat(req.getPrimitiveArg());
-            movieToDel = Storage.getMovies()
+            movieToDel = MovieCRUD.getAllMovies(Config.getConnection(), req.getUser())
                     .stream()
                     .filter(movie -> TBO == movie.getTotalBoxOffice())
                     .findAny()
@@ -164,12 +178,17 @@ public class ElementManipulationReceiver {
             return new ResponseBody(e.getMessage());
         } catch (NoSuchElementException e) {
             return new ResponseBody("No element with given TBO");
-
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-
-
-        Storage.getMovies().remove(movieToDel);
+        try {
+            MovieCRUD.removeById(Config.getConnection(), req.getUser(), movieToDel.getId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
         return new ResponseBody(new String[]{"Movie removed."});
     }
 
@@ -177,7 +196,13 @@ public class ElementManipulationReceiver {
      * 'count_greater_than_mpaa' command implementation
      */
     public ResponseBody countGreaterThanMPAA(ServerRequest request) {
-        HashSet<Movie> movies = Storage.getMovies();
+        HashSet<Movie> movies = null;
+        try {
+            movies = MovieCRUD.getAllMovies(Config.getConnection(), request.getUser());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
 
         MpaaRating userMpaa = null;
 
@@ -202,7 +227,13 @@ public class ElementManipulationReceiver {
      * 'filter_less_than_GPCC' command implementation
      */
     public ResponseBody filterLessThanGPCC(ServerRequest req) {
-        HashSet<Movie> movies = Storage.getMovies();
+        HashSet<Movie> movies = null;
+        try {
+            movies = MovieCRUD.getAllMovies(Config.getConnection(), req.getUser());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
         if (movies.isEmpty()) return new ResponseBody(new String[]{"Collection is empty!"});
         long GPC;
         try {

@@ -2,6 +2,7 @@ shared/serializables/CommandInfoObject.class
 shared/validators/base/NotNullValidator.class
 shared/exceptions/InvalidInputException.class
 shared/enteties/MpaaRating.class
+shared/enteties/User.class
 shared/validators/OscarValidator.class
 shared/enteties/Location.class
 shared/validators/CoordsValidator.class

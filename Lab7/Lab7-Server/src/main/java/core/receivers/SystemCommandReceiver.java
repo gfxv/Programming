@@ -1,11 +1,14 @@
 package core.receivers;
 
 import core.commands.base.Command;
+import core.db.crud.MovieCRUD;
+import core.system.Config;
 import core.system.History;
 import core.system.Invoker;
-import core.system.Storage;
 import shared.serializables.ResponseBody;
+import shared.serializables.ServerRequest;
 
+import java.sql.SQLException;
 import java.util.List;
 
 
@@ -29,12 +32,16 @@ public class SystemCommandReceiver {
     /**
      * 'info' command implementation
      */
-    public ResponseBody info() {
+    public ResponseBody info(ServerRequest req) {
 
-        return new ResponseBody(new String[]{
-                "Storage size: " + Storage.getMovies().size(),
-                "Storage type: " + Storage.getMovies().getClass().getSimpleName()
-        });
+        try {
+            return new ResponseBody(new String[]{
+                    "Storage size: " + MovieCRUD.getAllMovies(Config.getConnection(), req.getUser()).size(),
+                    "Storage type: " + MovieCRUD.getAllMovies(Config.getConnection(), req.getUser()).getClass().getSimpleName()
+            });
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

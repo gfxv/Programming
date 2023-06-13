@@ -49,6 +49,6 @@ public class InfoCommand implements Command {
      */
     @Override
     public ResponseBody execute(ServerRequest req) throws InvalidInputException {
-        return this.receiver.info();
+        return this.receiver.info(req);
     }
 }

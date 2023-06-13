@@ -41,8 +41,8 @@ public class Invoker {
         Command UpdateByIdCommand = new UpdateByIdCommand(elementManipulationReceiver);
         commands.put(UpdateByIdCommand.getName(), UpdateByIdCommand);
 
-        Command SaveCommand = new SaveCommand(collectionManipulationReceiver);
-        commands.put(SaveCommand.getName(), SaveCommand);
+//        Command SaveCommand = new SaveCommand(collectionManipulationReceiver);
+//        commands.put(SaveCommand.getName(), SaveCommand);
 
         Command HistoryCommand = new HistoryCommand(systemCommandReceiver);
         commands.put(HistoryCommand.getName(), HistoryCommand);

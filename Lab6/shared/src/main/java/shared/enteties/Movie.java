@@ -1,10 +1,7 @@
 package shared.enteties;
 
-import shared.exceptions.InvalidInputException;
-import shared.exceptions.InvalidLengthException;
-import shared.validators.*;
-
 import java.io.Serializable;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -79,53 +76,6 @@ public class Movie implements Serializable, Comparable<Movie> {
 
     }
 
-    public static Movie arrayToMovie(String[] records) throws InvalidInputException {
-        // 0 - id
-        // 1 - name
-        // 2 - creationDate
-        // 3 - oscarCount
-        // 4 - goldenPalmCount
-        // 5 - totalBoxOffice
-        // 6 - mpaaRating
-        // 7 - coords_x
-        // 8 - coords_y
-        // 9 - director_name
-        // 10 - director_height
-        // 11 - location_x
-        // 12 - location_y
-        // 13 - location_name
-        if (records.length != 14) {
-            throw new InvalidLengthException();
-        }
-
-        MovieNameValidator.validate(records[1]);
-        OscarValidator.validate(records[3]);
-        GoldenPalmValidator.validate(records[4]);
-        TBOValidator.validate(records[5]);
-        MpaaValidator.validate(records[6]);
-        CoordsValidator.validate(records[7], records[8]);
-        DirectorValidator.validate(records[9], records[10]);
-        LocationValidator.validate(records[13], new String[]{records[11], records[12]});
-
-        int oscarCounter = Integer.parseInt(records[3]);
-        long palmCounter = Long.parseLong(records[4]);
-        float totalBox = Float.parseFloat(records[5]);
-        Integer x = Integer.parseInt(records[7]);
-        Long y = Long.parseLong(records[8]);
-        long height = Long.parseLong(records[10]);
-        int loc_x = Integer.parseInt(records[11]);
-        int loc_y = Integer.parseInt(records[12]);
-
-        return new Movie(
-                records[1], new Coordinates(x, y), oscarCounter, palmCounter, totalBox,
-                MpaaRating.valueOf(records[6]), new Person(
-                records[9], height, new Location(
-                loc_x, loc_y, records[13]
-        )
-        )
-        );
-    }
-
     public String getName() {
         return this.name;
     }
@@ -195,6 +145,14 @@ public class Movie implements Serializable, Comparable<Movie> {
 
     public String[] getHeaders() {
         return headers;
+    }
+
+    public Coordinates getCoordinates() {
+        return this.coordinates;
+    }
+
+    public Person getDirector() {
+        return this.director;
     }
 
     @Override
