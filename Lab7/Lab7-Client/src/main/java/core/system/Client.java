@@ -113,7 +113,6 @@ public class Client {
         }
     }
 
-
     private void startConnection(String host, int port) {
         try {
             while (true) {

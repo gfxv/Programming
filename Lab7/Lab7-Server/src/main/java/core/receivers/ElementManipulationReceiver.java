@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 public class ElementManipulationReceiver {
 
+    private static final Object lock = new Object();
+
     /**
      * 'add' command implementation
      */
@@ -46,9 +48,11 @@ public class ElementManipulationReceiver {
         long finalId = id;
         boolean found = false;
         try {
-            found = MovieCRUD.getAllMovies(Config.getConnection(), req.getUser())
-                    .stream()
-                    .anyMatch(movie -> finalId == movie.getId());
+            synchronized (lock) {
+                found = MovieCRUD.getAllMoviesByUser(Config.getConnection(), req.getUser())
+                        .stream()
+                        .anyMatch(movie -> finalId == movie.getId());
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -76,10 +80,12 @@ public class ElementManipulationReceiver {
         }
 
         try {
-            for (Movie movie : MovieCRUD.getAllMovies(Config.getConnection(), req.getUser())) {
-                if (id == movie.getId()) {
-                    MovieCRUD.removeById(Config.getConnection(), req.getUser(), id);
-                    return new ResponseBody(new String[]{"Movie with id " + id + " was deleted successfully"});
+            synchronized (lock) {
+                for (Movie movie : MovieCRUD.getAllMoviesByUser(Config.getConnection(), req.getUser())) {
+                    if (id == movie.getId()) {
+                        MovieCRUD.removeById(Config.getConnection(), req.getUser(), id);
+                        return new ResponseBody(new String[]{"Movie with id " + id + " was deleted successfully"});
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -95,9 +101,9 @@ public class ElementManipulationReceiver {
      */
     public ResponseBody addIfMin(ServerRequest req) {
         Movie lowest = null;
-        HashSet<Movie> Movies = null;
+        HashSet<Movie> Movies;
         try {
-            Movies = MovieCRUD.getAllMovies(Config.getConnection(), req.getUser());
+            Movies = MovieCRUD.getAllMoviesByUser(Config.getConnection(), req.getUser());
             if (Movies.size() == 0) {
                 MovieCRUD.addMovie(Config.getConnection(), req.getUser(), req.getComplexArg());
                 return new ResponseBody(new String[]{"Movie added successfully!"});
@@ -107,23 +113,27 @@ public class ElementManipulationReceiver {
             throw new RuntimeException();
         }
 
-
-        for (Movie movie : Movies) {
-            if (lowest == null) {
-                lowest = movie;
-                continue;
+        synchronized (lock) {
+            for (Movie movie : Movies) {
+                if (lowest == null) {
+                    lowest = movie;
+                    continue;
+                }
+                if (movie.compareTo(lowest) < 0) lowest = movie;
             }
-            if (movie.compareTo(lowest) < 0) lowest = movie;
         }
 
         try {
-            Movie m = req.getComplexArg();
-            assert lowest != null;
-            if (m.compareTo(lowest) < 0) { // add if less
-                MovieCRUD.addMovie(Config.getConnection(), req.getUser(), m);
-            } else {
-                return new ResponseBody("Can't add this element, it is not the lowest");
+            synchronized (lock) {
+                Movie m = req.getComplexArg();
+                assert lowest != null;
+                if (m.compareTo(lowest) < 0) { // add if less
+                    MovieCRUD.addMovie(Config.getConnection(), req.getUser(), m);
+                } else {
+                    return new ResponseBody("Can't add this element, it is not the lowest");
+                }
             }
+
         } catch (NullPointerException ignored) {
             ignored.printStackTrace();
         } catch (SQLException e) {
@@ -140,18 +150,20 @@ public class ElementManipulationReceiver {
 
         Movie userMovie = req.getComplexArg();
         try {
-            HashSet<Movie> moviesToDel = (HashSet<Movie>) MovieCRUD.getAllMovies(Config.getConnection(), req.getUser())
-                    .stream()
-                    .filter(movie -> movie.compareTo(userMovie) < 0)
-                    .collect(Collectors.toSet());
-            moviesToDel.forEach(movie -> {
-                try {
-                    MovieCRUD.removeById(Config.getConnection(), req.getUser(), movie.getId());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            });
-            return new ResponseBody(MovieCRUD.getAllMovies(Config.getConnection(), req.getUser()));
+            synchronized (lock) {
+                HashSet<Movie> moviesToDel = (HashSet<Movie>) MovieCRUD.getAllMoviesByUser(Config.getConnection(), req.getUser())
+                        .stream()
+                        .filter(movie -> movie.compareTo(userMovie) < 0)
+                        .collect(Collectors.toSet());
+                moviesToDel.forEach(movie -> {
+                    try {
+                        MovieCRUD.removeById(Config.getConnection(), req.getUser(), movie.getId());
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+            return new ResponseBody(MovieCRUD.getAllMoviesByUser(Config.getConnection(), req.getUser()));
         } catch (NoSuchElementException | SQLException e) {
             return new ResponseBody("AHTUNG AHTUNG!");
         }
@@ -161,17 +173,18 @@ public class ElementManipulationReceiver {
      * 'remove_by_total_box_office' command implementation
      */
     public ResponseBody removeByTBO(ServerRequest req) {
-
         float TBO;
         Movie movieToDel;
         try {
-            TBOValidator.validate(req.getPrimitiveArg());
-            TBO = Float.parseFloat(req.getPrimitiveArg());
-            movieToDel = MovieCRUD.getAllMovies(Config.getConnection(), req.getUser())
-                    .stream()
-                    .filter(movie -> TBO == movie.getTotalBoxOffice())
-                    .findAny()
-                    .get();
+            synchronized (lock) {
+                TBOValidator.validate(req.getPrimitiveArg());
+                TBO = Float.parseFloat(req.getPrimitiveArg());
+                movieToDel = MovieCRUD.getAllMoviesByUser(Config.getConnection(), req.getUser())
+                        .stream()
+                        .filter(movie -> TBO == movie.getTotalBoxOffice())
+                        .findAny()
+                        .get();
+            }
         } catch (NumberFormatException e) {
             return new ResponseBody("TBO have to be Float");
         } catch (InvalidInputException e) {
@@ -201,33 +214,36 @@ public class ElementManipulationReceiver {
             movies = MovieCRUD.getAllMovies(Config.getConnection(), request.getUser());
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
 
         MpaaRating userMpaa = null;
 
-        for (MpaaRating mpaa : MpaaRating.values()) {
-            if (mpaa.name().equals(request.getPrimitiveArg())) {
-                userMpaa = mpaa;
+        synchronized (lock) {
+            for (MpaaRating mpaa : MpaaRating.values()) {
+                if (mpaa.name().equals(request.getPrimitiveArg())) {
+                    userMpaa = mpaa;
+                }
             }
         }
+
         if (userMpaa == null) return new ResponseBody("Invalid MPAA Rating");
 
-        MpaaRating finalUserMpaa = userMpaa;
-        int counter = movies.stream()
-                .filter(e -> e.getMpaaRating().getValue() > finalUserMpaa.getValue())
-                .toList()
-                .size();
-
-        String result = "There are " + counter + " movie(s) with Mpaa Rating greater than " + userMpaa;
-        return new ResponseBody(new String[]{result});
+        synchronized (lock) {
+            MpaaRating finalUserMpaa = userMpaa;
+            int counter = movies.stream()
+                    .filter(e -> e.getMpaaRating().getValue() > finalUserMpaa.getValue())
+                    .toList()
+                    .size();
+            String result = "There are " + counter + " movie(s) with Mpaa Rating greater than " + userMpaa;
+            return new ResponseBody(new String[]{result});
+        }
     }
 
     /**
      * 'filter_less_than_GPCC' command implementation
      */
     public ResponseBody filterLessThanGPCC(ServerRequest req) {
-        HashSet<Movie> movies = null;
+        HashSet<Movie> movies;
         try {
             movies = MovieCRUD.getAllMovies(Config.getConnection(), req.getUser());
         } catch (SQLException e) {
@@ -242,11 +258,13 @@ public class ElementManipulationReceiver {
             return new ResponseBody("GPC have to be Integer or Long");
         }
 
-        HashSet<Movie> resultMovies = (HashSet<Movie>) movies.stream()
-                .filter(movie -> movie.getGoldenPalmCount() < GPC)
-                .collect(Collectors.toSet());
+        synchronized (lock) {
+            HashSet<Movie> resultMovies = (HashSet<Movie>) movies.stream()
+                    .filter(movie -> movie.getGoldenPalmCount() < GPC)
+                    .collect(Collectors.toSet());
+            return new ResponseBody(resultMovies);
 
-        return new ResponseBody(resultMovies);
+        }
     }
 
 }

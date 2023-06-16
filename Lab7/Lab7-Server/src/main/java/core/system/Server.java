@@ -57,6 +57,8 @@ public class Server {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+
         connection = DriverManager.getConnection(dbURL, info);
         Config.setConnection(connection);
 
@@ -78,6 +80,7 @@ public class Server {
                         System.out.println("New connection!");
                     }
                     else if (key.isReadable()) {
+//                        readRequest(key, selector);
                         Runnable rq = () -> {
                             try {
                                 readRequest(key, selector);

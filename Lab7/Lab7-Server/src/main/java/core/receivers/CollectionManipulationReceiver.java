@@ -11,7 +11,6 @@ import java.util.*;
 
 public class CollectionManipulationReceiver {
 
-
     /**
      *  'show' command implementation
      */
@@ -42,23 +41,4 @@ public class CollectionManipulationReceiver {
         return new ResponseBody(new String[]{"Collection cleared."});
     }
 
-//    public ResponseBody save() {
-//        FileManager fm = null;
-//        try {
-//            fm = new FileManager(Config.getFilepath());
-//        } catch (Exception ignored) {}
-//        try {
-//            assert fm != null;
-//            fm.clearFile();
-//        } catch (IOException e) {
-//            System.out.println("Oops, something went wrong");
-//        }
-//        for (Movie movie : Storage.getMovies()) {
-//            try {
-//                fm.append(movie.toArray());
-//            } catch (Exception ignored) {
-//            }
-//        }
-//        return new ResponseBody(new String[]{"Collection saved to " + Config.getFilepath()});
-//    }
 }
