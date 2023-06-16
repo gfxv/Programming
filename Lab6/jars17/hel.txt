@@ -1,7 +1,0 @@
-// Launch server
-java -jar Server.jar localhost default.csv
-
-// SSH connection
-ssh -p2222 -L 6666:localhost:6666 s373450@helios.se.ifmo.ru
-
-
